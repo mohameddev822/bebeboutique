@@ -1,0 +1,178 @@
+import logo from '../assets/logo.jpeg';
+import { useGoogleLogin } from '@react-oauth/google';
+import { useState, useEffect } from 'react';
+import AdminForm from '../pages/AdminForm';
+import HomePage from '../pages/HomePage';
+import Product from '../pages/Product';
+import axios from 'axios';
+
+export default function Navbar() {
+    const [authorized, setAuthorized] = useState(false);
+    const [showProducts, setShowProducts] = useState(false);
+    const [showAdmin, setShowAdmin] = useState(false);
+    const AUTHORIZED_EMAIL = 'sihamnouali7@gmail.com';
+
+    useEffect(() => {
+        const checkStoredAuth = async () => {
+            const savedAuth = localStorage.getItem('adminAuthorized');
+            if (savedAuth === 'true') {
+                setAuthorized(true);
+                return;
+            }
+
+            try {
+                const response = await axios.get('http://localhost:3000/api/getuser');
+                if (response.data && response.data.isauthorizeduser === AUTHORIZED_EMAIL) {
+                    setAuthorized(true);
+                    localStorage.setItem('adminAuthorized', 'true');
+                }
+            } catch (error) {
+                console.error('Error checking authorization:', error);
+            }
+        };
+
+        checkStoredAuth();
+    }, []);
+
+    const loginWithGoogle = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            try {
+                const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.access_token}`,
+                    },
+                });
+
+                const userInfo = await response.json();
+
+                if (userInfo.email === AUTHORIZED_EMAIL) {
+                    setAuthorized(true);
+                    localStorage.setItem('adminAuthorized', 'true');
+
+                    await axios.post('http://localhost:3000/api/saveuser', {
+                        isauthorizeduser: userInfo.email
+                    });
+                    
+                    setShowProducts(true);
+                    setShowAdmin(false);
+                } 
+            } catch (error) {
+                console.error('Error during Google login:', error);
+            }
+        },
+        onError: (error) => {
+            console.log('Login Failed:', error);
+        },
+    });
+
+    const handleLogout = () => {
+        setAuthorized(false);
+        setShowProducts(false);
+        setShowAdmin(false);
+        localStorage.removeItem('adminAuthorized');
+    };
+
+    const goToHome = () => {
+        setShowProducts(false);
+        setShowAdmin(false);
+    };
+
+    const goToAdmin = () => {
+        setShowProducts(false);
+        setShowAdmin(true);
+    };
+
+    const goToProducts = () => {
+        setShowAdmin(false);
+        setShowProducts(true);
+    };
+
+    return (
+        <>
+            {/* NAVBAR */}
+            <div className="flex justify-between items-center px-8 py-4 bg-white shadow-md">
+                <nav className="flex flex-row items-center gap-4">
+                    <img src={logo} alt="logo" className="h-16 w-16 cursor-pointer" onClick={goToHome} />
+                    <h1 className="font-bold ml-3 text-xl text-pink-600 cursor-pointer" onClick={goToHome}>
+                        BebeBoutique
+                    </h1>
+                    {/* Boutons de navigation à gauche (après connexion) */}
+                    {authorized && showAdmin && (
+                        <button onClick={goToProducts} className="font-bold text-blue-600 hover:text-blue-800 ml-4">
+                            🛍️ Produits
+                        </button>
+                    )}
+                    {authorized && showProducts && (
+                        <button onClick={goToAdmin} className="font-bold text-blue-600 hover:text-blue-800 ml-4">
+                            ⚙️ Admin
+                        </button>
+                    )}
+                    {!authorized && showProducts && (
+                        <button onClick={goToHome} className="font-bold text-pink-600 hover:text-pink-800 ml-4">
+                            ← Retour à l'accueil
+                        </button>
+                    )}
+                </nav>
+                
+                <div className="flex items-center gap-4">
+                    {!authorized ? (
+                        // === AVANT CONNEXION ===
+                        // Toujours afficher ces deux boutons pour l'utilisateur non connecté
+                        <>
+                            <button onClick={goToProducts} className="font-bold text-pink-600 hover:text-pink-800">
+                                Découvrir nos produits
+                            </button>
+                            <button
+                                onClick={loginWithGoogle}
+                                className="font-bold text-blue-600 hover:text-blue-800"
+                            >
+                                Se connecter avec Google 🚀
+                            </button>
+                        </>
+                    ) : (
+                        // === APRÈS CONNEXION ===
+                        // Utilisateur connecté
+                        <>
+                            {!showAdmin && !showProducts && (
+                                // Sur la page d'accueil (connecté)
+                                <>
+                                    <button onClick={goToProducts} className="font-bold text-pink-600 hover:text-pink-800">
+                                        Découvrir nos produits
+                                    </button>
+                                    <button onClick={goToAdmin} className="font-bold text-blue-600 hover:text-blue-800">
+                                        ⚙️ Admin
+                                    </button>
+                                </>
+                            )}
+                            <button
+                                onClick={handleLogout}
+                                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors"
+                            >
+                                Déconnexion
+                            </button>
+                        </>
+                    )}
+                </div>
+            </div>
+
+            {/* CONTENU PRINCIPAL */}
+            {authorized ? (
+                // Utilisateur connecté
+                showAdmin ? (
+                    <AdminForm authorized={authorized} setAuthorized={setAuthorized} />
+                ) : showProducts ? (
+                    <Product authorized={authorized} setAuthorized={setAuthorized} />
+                ) : (
+                    <HomePage />
+                )
+            ) : (
+                // Utilisateur non connecté
+                showProducts ? (
+                    <Product authorized={authorized} setAuthorized={setAuthorized} />
+                ) : (
+                    <HomePage />
+                )
+            )}
+        </>
+    );
+}
