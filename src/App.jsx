@@ -10,7 +10,7 @@ export default function App() {
   useEffect(() => {
     const fetchClientId = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/getclientid");
+        const response = await axios.get("https://backend-theta-gold-46.vercel.app/api/getclientid");
         setClientId(response.data);
       } catch (error) {
         console.error('Error fetching client ID:', error);
