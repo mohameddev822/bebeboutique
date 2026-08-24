@@ -250,9 +250,9 @@ export default function Product({ authorized }) {
 
     return (
         <>
-            <div className="flex flex-row justify-between items-center rounded-lg mt-9 mr-28 ml-28">
-                <div className="flex items-center gap-4">
-                    <h2 className="text-xl font-bold text-pink-600">🛍️ Panier: {order.length} article(s)</h2>
+            <div className="flex flex-col sm:flex-row justify-between items-center rounded-lg mt-9 mr-4 sm:mr-28 ml-4 sm:ml-28 gap-4 sm:gap-0">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+                    <h2 className="text-lg sm:text-xl font-bold text-pink-600">🛍️ Panier: {order.length} article(s)</h2>
                     {order.length > 0 && (
                         <span className="text-sm text-gray-500">
                             Total: {order.reduce((total, product) => total + (product.price * product.quantity), 0)} DHS
@@ -262,7 +262,7 @@ export default function Product({ authorized }) {
                 <button
                     disabled={order.length === 0}
                     onClick={() => setShowCheckout(true)}
-                    className={`px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${order.length > 0
+                    className={`w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold transition-all duration-200 text-sm sm:text-base ${order.length > 0
                             ? 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-md hover:shadow-lg transform hover:-translate-y-0.5'
                             : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                         }`}
@@ -274,14 +274,14 @@ export default function Product({ authorized }) {
             {showCheckout && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-                        <div className="bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-4 rounded-t-2xl">
-                            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                        <div className="bg-gradient-to-r from-pink-500 to-pink-600 px-4 sm:px-6 py-3 sm:py-4 rounded-t-2xl">
+                            <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
                                 📝 Informations de commande
                             </h2>
                         </div>
 
-                        <div className="p-6 space-y-4">
-                            <div className="grid grid-cols-2 gap-3">
+                        <div className="p-4 sm:p-6 space-y-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">
                                         Prénom <span className="text-red-500">*</span>
@@ -359,7 +359,7 @@ export default function Product({ authorized }) {
                                 </div>
                             </div>
 
-                            <div className="flex gap-3 pt-2">
+                            <div className="flex flex-col sm:flex-row gap-3 pt-2">
                                 <button
                                     onClick={() => {
                                         setShowCheckout(false);
@@ -370,13 +370,13 @@ export default function Product({ authorized }) {
                                             location: ''
                                         });
                                     }}
-                                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                                    className="w-full sm:flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
                                 >
                                     Annuler
                                 </button>
                                 <button
                                     onClick={() => handleBuy(order)}
-                                    className="flex-1 px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg font-semibold hover:from-green-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg"
+                                    className="w-full sm:flex-1 px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg font-semibold hover:from-green-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg"
                                 >
                                     ✅ Confirmer et envoyer
                                 </button>
@@ -390,8 +390,8 @@ export default function Product({ authorized }) {
             {showDescriptionModal && selectedProduct && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                        <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4 rounded-t-2xl flex justify-between items-center">
-                            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                        <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-4 sm:px-6 py-3 sm:py-4 rounded-t-2xl flex justify-between items-center">
+                            <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
                                 📖 Description détaillée
                             </h2>
                             <button
@@ -402,15 +402,15 @@ export default function Product({ authorized }) {
                             </button>
                         </div>
 
-                        <div className="p-6 space-y-4">
-                            <div className="flex items-center gap-4">
+                        <div className="p-4 sm:p-6 space-y-4">
+                            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
                                 <img
                                     src={selectedProduct.image}
                                     alt={selectedProduct.name}
-                                    className="w-24 h-24 object-cover rounded-lg shadow-md"
+                                    className="w-full sm:w-24 h-48 sm:h-24 object-cover rounded-lg shadow-md"
                                 />
-                                <div>
-                                    <h3 className="text-xl font-bold text-gray-800">{selectedProduct.name}</h3>
+                                <div className="text-center sm:text-left">
+                                    <h3 className="text-lg sm:text-xl font-bold text-gray-800">{selectedProduct.name}</h3>
                                     <p className="text-pink-600 font-semibold">{selectedProduct.price} DHS</p>
                                     <p className="text-sm text-gray-500">
                                         <span className="font-medium">Age:</span> {selectedProduct.age || 'Non spécifié'}
@@ -420,18 +420,18 @@ export default function Product({ authorized }) {
 
                             <div className="border-t border-gray-200 pt-4">
                                 <h4 className="font-semibold text-gray-700 mb-2">Description :</h4>
-                                <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">
+                                <p className="text-gray-600 leading-relaxed whitespace-pre-wrap text-sm sm:text-base">
                                     {selectedProduct.description}
                                 </p>
                             </div>
                     {!authorized && 
-                            <div className="flex gap-3 pt-4 border-t border-gray-200">
+                            <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
                                 <button
                                     onClick={() => {
                                         handlePanier(selectedProduct.id);
                                         handleCloseModal();
                                     }}
-                                    className="flex-1 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-semibold transition-all shadow-md hover:shadow-lg"
+                                    className="w-full sm:flex-1 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-semibold transition-all shadow-md hover:shadow-lg"
                                 >
                                     🛒 Ajouter au panier
                                 </button>
@@ -446,8 +446,8 @@ export default function Product({ authorized }) {
             { showEditModal && editingProduct && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                        <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-6 py-4 rounded-t-2xl flex justify-between items-center">
-                            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                        <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-4 sm:px-6 py-3 sm:py-4 rounded-t-2xl flex justify-between items-center">
+                            <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
                                 ✏️ Modifier le produit
                             </h2>
                             <button
@@ -458,7 +458,7 @@ export default function Product({ authorized }) {
                             </button>
                         </div>
 
-                        <form onSubmit={handleUpdateProduct} className="p-6 space-y-4">
+                        <form onSubmit={handleUpdateProduct} className="p-4 sm:p-6 space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Nom du produit <span className="text-red-500">*</span>
@@ -487,7 +487,7 @@ export default function Product({ authorized }) {
                                 />
                             </div>
 
-                            <div className="grid grid-cols-2 gap-3">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">
                                         Prix (DHS) <span className="text-red-500">*</span>
@@ -520,12 +520,12 @@ export default function Product({ authorized }) {
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Image du produit
                                 </label>
-                                <div className="flex items-center gap-4">
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                                     {imagePreview && (
                                         <img
                                             src={imagePreview}
                                             alt="Preview"
-                                            className="w-20 h-20 object-cover rounded-lg border border-gray-200"
+                                            className="w-full sm:w-20 h-48 sm:h-20 object-cover rounded-lg border border-gray-200"
                                         />
                                     )}
                                     <input
@@ -533,23 +533,23 @@ export default function Product({ authorized }) {
                                         name="image"
                                         accept="image/*"
                                         onChange={handleEditImageChange}
-                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-400 outline-none"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-400 outline-none"
                                     />
                                 </div>
                                 <p className="text-xs text-gray-500 mt-1">Laissez vide pour conserver l'image actuelle</p>
                             </div>
 
-                            <div className="flex gap-3 pt-4 border-t border-gray-200">
+                            <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
                                 <button
                                     type="button"
                                     onClick={handleCloseEditModal}
-                                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                                    className="w-full sm:flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
                                 >
                                     Annuler
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg font-semibold hover:from-purple-600 hover:to-purple-700 transition-all shadow-md hover:shadow-lg"
+                                    className="w-full sm:flex-1 px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg font-semibold hover:from-purple-600 hover:to-purple-700 transition-all shadow-md hover:shadow-lg"
                                 >
                                     💾 Enregistrer les modifications
                                 </button>
@@ -560,28 +560,28 @@ export default function Product({ authorized }) {
             )}
 
             <div className="flex flex-col mt-8">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 px-4">
                     {allproducts.map((product) => {
                         return (
                             <div key={product.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200 border border-gray-100 relative">
-                                <div className="h-64 overflow-hidden bg-gray-50">
-                                    <img src={product.image} alt={product.name} className="w-full h-full hover:scale-105 transition-transform duration-300" />
+                                <div className="h-48 sm:h-56 md:h-64 overflow-hidden bg-gray-50">
+                                    <img src={product.image} alt={product.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
                                 </div>
-                                <div className="p-4 space-y-2">
+                                <div className="p-3 sm:p-4 space-y-2">
                                     <div className="flex justify-between items-start">
-                                        <h2 className="text-lg font-semibold text-gray-800">{product.name}</h2>
+                                        <h2 className="text-base sm:text-lg font-semibold text-gray-800">{product.name}</h2>
                                         {authorized && (
                                             <div className="flex gap-1">
                                                 <button
                                                     onClick={() => handleOpenEditModal(product)}
-                                                    className="text-blue-500 hover:text-blue-700 transition-colors p-1"
+                                                    className="text-blue-500 hover:text-blue-700 transition-colors p-1 text-sm sm:text-base"
                                                     title="Modifier"
                                                 >
                                                     ✏️
                                                 </button>
                                                 <button
                                                     onClick={() => handleDeleteProduct(product.id)}
-                                                    className="text-red-500 hover:text-red-700 transition-colors p-1"
+                                                    className="text-red-500 hover:text-red-700 transition-colors p-1 text-sm sm:text-base"
                                                     title="Supprimer"
                                                 >
                                                     🗑️
@@ -591,7 +591,7 @@ export default function Product({ authorized }) {
                                     </div>
 
                                     <div className="relative">
-                                        <p className="text-gray-600 text-sm">
+                                        <p className="text-gray-600 text-xs sm:text-sm">
                                             {product.description.length > MAX_LENGTH
                                                 ? `${product.description.slice(0, MAX_LENGTH)}...`
                                                 : product.description}
@@ -599,27 +599,27 @@ export default function Product({ authorized }) {
                                         {product.description.length > MAX_LENGTH && (
                                             <button
                                                 onClick={() => handleOpenModal(product.id)}
-                                                className="text-blue-600 hover:text-blue-800 text-sm font-medium mt-1"
+                                                className="text-blue-600 hover:text-blue-800 text-xs sm:text-sm font-medium mt-1"
                                             >
                                                 Voir plus 📖
                                             </button>
                                         )}
                                     </div>
-                                    <p className="text-sm text-gray-500">
+                                    <p className="text-xs sm:text-sm text-gray-500">
                                         <span className="font-medium">Age:</span> {product.age || 'Non spécifié'}
                                     </p>
-                                    <p className="text-xl font-bold text-pink-600">{product.price} DHS</p>
+                                    <p className="text-lg sm:text-xl font-bold text-pink-600">{product.price} DHS</p>
 {!authorized &&
 <>
-                                    <div className="flex items-center gap-2">
-                                        <label className="text-sm font-medium text-gray-700">Quantité :</label>
+                                    <div className="flex flex-wrap items-center gap-2">
+                                        <label className="text-xs sm:text-sm font-medium text-gray-700">Quantité :</label>
                                         <select
                                             value={quantities[product.id] || 1}
                                             onChange={(e) => {
                                                 const value = parseInt(e.target.value);
                                                 handleQuantitySelection(product.id, value);
                                             }}
-                                            className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none"
+                                            className="border border-gray-300 rounded-md px-2 py-1 text-xs sm:text-sm focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none"
                                         >
                                             {[...Array(10)].map((_, i) => (
                                                 <option key={i + 1} value={i + 1}>
@@ -632,7 +632,7 @@ export default function Product({ authorized }) {
                                     <div className="flex flex-col gap-2">
                                         <button
                                             onClick={() => handlePanier(product.id)}
-                                            className={`w-full px-4 py-2 rounded-lg font-medium transition-all duration-200 ${cartStatus[product.id]
+                                            className={`w-full px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${cartStatus[product.id]
                                                     ? 'bg-green-500 hover:bg-green-600 text-white'
                                                     : 'bg-yellow-500 hover:bg-yellow-600 text-white hover:shadow-md'
                                                 }`}
@@ -643,7 +643,7 @@ export default function Product({ authorized }) {
                                         {cartStatus[product.id] && (
                                             <button
                                                 onClick={() => removeFromCart(product.id)}
-                                                className="w-full px-4 py-1.5 text-sm rounded-lg font-medium bg-red-100 hover:bg-red-200 text-red-600 transition-colors duration-200"
+                                                className="w-full px-3 sm:px-4 py-1 text-xs sm:text-sm rounded-lg font-medium bg-red-100 hover:bg-red-200 text-red-600 transition-colors duration-200"
                                             >
                                                 Retirer du panier
                                             </button>

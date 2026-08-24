@@ -10,6 +10,7 @@ export default function Navbar() {
     const [authorized, setAuthorized] = useState(false);
     const [showProducts, setShowProducts] = useState(false);
     const [showAdmin, setShowAdmin] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const AUTHORIZED_EMAIL = 'sihamnouali7@gmail.com';
 
     useEffect(() => {
@@ -55,96 +56,115 @@ export default function Navbar() {
                     
                     setShowProducts(true);
                     setShowAdmin(false);
+                    setIsMenuOpen(false);
                 } 
             } catch (error) {
                 console.error('Error during Google login:', error);
             }
         },
-       
     });
 
     const handleLogout = () => {
         setAuthorized(false);
         setShowProducts(false);
         setShowAdmin(false);
+        setIsMenuOpen(false);
         localStorage.removeItem('adminAuthorized');
     };
 
     const goToHome = () => {
         setShowProducts(false);
         setShowAdmin(false);
+        setIsMenuOpen(false);
     };
 
     const goToAdmin = () => {
         setShowProducts(false);
         setShowAdmin(true);
+        setIsMenuOpen(false);
     };
 
     const goToProducts = () => {
         setShowAdmin(false);
         setShowProducts(true);
+        setIsMenuOpen(false);
+    };
+
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen);
     };
 
     return (
         <>
-            {/* NAVBAR */}
-            <div className="flex justify-between items-center px-8 py-4 bg-white shadow-md">
-                <nav className="flex flex-row items-center gap-4">
-                    <img src={logo} alt="logo" className="h-16 w-16 cursor-pointer" onClick={goToHome} />
-                    <h1 className="font-bold ml-3 text-xl text-pink-600 cursor-pointer" onClick={goToHome}>
+            <div className="flex flex-wrap items-center justify-between px-4 sm:px-6 md:px-8 py-3 sm:py-4 bg-white shadow-md w-full relative">
+                <nav className="flex flex-row items-center gap-2 sm:gap-4">
+                    <img 
+                        src={logo} 
+                        alt="logo" 
+                        className="h-12 sm:h-14 md:h-16 w-12 sm:w-14 md:w-16 cursor-pointer" 
+                        onClick={goToHome} 
+                    />
+                    <h1 
+                        className="font-bold ml-1 sm:ml-3 text-lg sm:text-xl md:text-2xl text-pink-600 cursor-pointer"
+                        onClick={goToHome}
+                    >
                         BebeBoutique
                     </h1>
-                    {/* Boutons de navigation à gauche (après connexion) */}
-                    {authorized && showAdmin && (
-                        <button onClick={goToProducts} className="font-bold text-blue-600 hover:text-blue-800 ml-4">
-                            🛍️ Produits
-                        </button>
-                    )}
-                    {authorized && showProducts && (
-                        <button onClick={goToAdmin} className="font-bold text-blue-600 hover:text-blue-800 ml-4">
-                            ⚙️ Admin
-                        </button>
-                    )}
-                    {!authorized && showProducts && (
-                        <button onClick={goToHome} className="font-bold text-pink-600 hover:text-pink-800 ml-4">
-                            ← Retour à l'accueil
-                        </button>
-                    )}
                 </nav>
                 
-                <div className="flex items-center gap-4">
+                <button 
+                    onClick={toggleMenu}
+                    className="flex flex-col gap-1.5 p-2 hover:bg-gray-100 rounded-lg transition-colors md:hidden"
+                    aria-label="Toggle menu"
+                >
+                    <span className={`block w-6 h-0.5 bg-gray-600 transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
+                    <span className={`block w-6 h-0.5 bg-gray-600 transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`}></span>
+                    <span className={`block w-6 h-0.5 bg-gray-600 transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+                </button>
+
+                <div className="hidden md:flex flex-wrap items-center gap-2 sm:gap-4">
                     {!authorized ? (
-                        // === AVANT CONNEXION ===
-                        // Toujours afficher ces deux boutons pour l'utilisateur non connecté
                         <>
-                            <button onClick={goToProducts} className="font-bold text-pink-600 hover:text-pink-800">
+                            <button onClick={goToProducts} className="font-bold text-pink-600 hover:text-pink-800 text-sm sm:text-base whitespace-nowrap">
                                 Découvrir nos produits
                             </button>
                             <button
                                 onClick={loginWithGoogle}
-                                className="font-bold text-blue-600 hover:text-blue-800"
+                                className="font-bold text-blue-600 hover:text-blue-800 text-sm sm:text-base whitespace-nowrap"
                             >
                                 Se connecter avec Google 🚀
                             </button>
                         </>
                     ) : (
-                        // === APRÈS CONNEXION ===
-                        // Utilisateur connecté
                         <>
                             {!showAdmin && !showProducts && (
-                                // Sur la page d'accueil (connecté)
                                 <>
-                                    <button onClick={goToProducts} className="font-bold text-pink-600 hover:text-pink-800">
+                                    <button onClick={goToProducts} className="font-bold text-pink-600 hover:text-pink-800 text-sm sm:text-base whitespace-nowrap">
                                         Découvrir nos produits
                                     </button>
-                                    <button onClick={goToAdmin} className="font-bold text-blue-600 hover:text-blue-800">
+                                    <button onClick={goToAdmin} className="font-bold text-blue-600 hover:text-blue-800 text-sm sm:text-base whitespace-nowrap">
                                         ⚙️ Admin
                                     </button>
                                 </>
                             )}
+                            {authorized && showAdmin && (
+                                <button onClick={goToProducts} className="font-bold text-blue-600 hover:text-blue-800 text-sm sm:text-base whitespace-nowrap">
+                                    🛍️ Produits
+                                </button>
+                            )}
+                            {authorized && showProducts && (
+                                <button onClick={goToAdmin} className="font-bold text-blue-600 hover:text-blue-800 text-sm sm:text-base whitespace-nowrap">
+                                    ⚙️ Admin
+                                </button>
+                            )}
+                            {!authorized && showProducts && (
+                                <button onClick={goToHome} className="font-bold text-pink-600 hover:text-pink-800 text-sm sm:text-base whitespace-nowrap">
+                                    ← Retour à l'accueil
+                                </button>
+                            )}
                             <button
                                 onClick={handleLogout}
-                                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors"
+                                className="bg-red-500 hover:bg-red-600 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-semibold transition-colors text-sm sm:text-base"
                             >
                                 Déconnexion
                             </button>
@@ -153,24 +173,92 @@ export default function Navbar() {
                 </div>
             </div>
 
-            {/* CONTENU PRINCIPAL */}
-            {authorized ? (
-                // Utilisateur connecté
-                showAdmin ? (
-                    <AdminForm authorized={authorized} setAuthorized={setAuthorized} />
-                ) : showProducts ? (
-                    <Product authorized={authorized} setAuthorized={setAuthorized} />
-                ) : (
-                    <HomePage />
-                )
-            ) : (
-                // Utilisateur non connecté
-                showProducts ? (
-                    <Product authorized={authorized} setAuthorized={setAuthorized} />
-                ) : (
-                    <HomePage />
-                )
+            {isMenuOpen && (
+                <div className="md:hidden bg-white border-t border-gray-100 shadow-lg px-4 py-3 space-y-3 w-full">
+                    {!authorized ? (
+                        <>
+                            <button 
+                                onClick={goToProducts} 
+                                className="block w-full text-left font-bold text-pink-600 hover:text-pink-800 py-2 px-3 hover:bg-gray-50 rounded-lg transition-colors"
+                            >
+                                Découvrir nos produits
+                            </button>
+                            <button
+                                onClick={loginWithGoogle}
+                                className="block w-full text-left font-bold text-blue-600 hover:text-blue-800 py-2 px-3 hover:bg-gray-50 rounded-lg transition-colors"
+                            >
+                                Se connecter avec Google 🚀
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            {!showAdmin && !showProducts && (
+                                <>
+                                    <button 
+                                        onClick={goToProducts} 
+                                        className="block w-full text-left font-bold text-pink-600 hover:text-pink-800 py-2 px-3 hover:bg-gray-50 rounded-lg transition-colors"
+                                    >
+                                        Découvrir nos produits
+                                    </button>
+                                    <button 
+                                        onClick={goToAdmin} 
+                                        className="block w-full text-left font-bold text-blue-600 hover:text-blue-800 py-2 px-3 hover:bg-gray-50 rounded-lg transition-colors"
+                                    >
+                                        ⚙️ Admin
+                                    </button>
+                                </>
+                            )}
+                            {authorized && showAdmin && (
+                                <button 
+                                    onClick={goToProducts} 
+                                    className="block w-full text-left font-bold text-blue-600 hover:text-blue-800 py-2 px-3 hover:bg-gray-50 rounded-lg transition-colors"
+                                >
+                                    🛍️ Produits
+                                </button>
+                            )}
+                            {authorized && showProducts && (
+                                <button 
+                                    onClick={goToAdmin} 
+                                    className="block w-full text-left font-bold text-blue-600 hover:text-blue-800 py-2 px-3 hover:bg-gray-50 rounded-lg transition-colors"
+                                >
+                                    ⚙️ Admin
+                                </button>
+                            )}
+                            {!authorized && showProducts && (
+                                <button 
+                                    onClick={goToHome} 
+                                    className="block w-full text-left font-bold text-pink-600 hover:text-pink-800 py-2 px-3 hover:bg-gray-50 rounded-lg transition-colors"
+                                >
+                                    ← Retour à l'accueil
+                                </button>
+                            )}
+                            <button
+                                onClick={handleLogout}
+                                className="block w-full text-center bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors"
+                            >
+                                Déconnexion
+                            </button>
+                        </>
+                    )}
+                </div>
             )}
+
+            <div className="w-full">
+                {authorized ? (
+                    showAdmin ? (
+                        <AdminForm authorized={authorized} setAuthorized={setAuthorized} />
+                    ) : showProducts ? (
+                        <Product authorized={authorized} setAuthorized={setAuthorized} />
+                    ) : (
+                        <HomePage />
+                    )
+                ) : (
+                    showProducts ? (
+                        <Product authorized={authorized} setAuthorized={setAuthorized} />
+                    ) : (
+                        <HomePage />
+                    ))}
+            </div>
         </>
     );
 }
