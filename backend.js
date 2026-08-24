@@ -16,10 +16,25 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 app.use(cors({
-    origin: [
-        "http://localhost:5173",
-        "https://bebeboutique-kn38h76op-mohameddev822s-projects.vercel.app/"
-    ]
+    origin: function (origin, callback) {
+        // Permettre les requêtes sans origin (ex: Postman)
+        if (!origin) return callback(null, true);
+        
+        // Liste des origines autorisées
+        const allowedOrigins = [
+            "http://localhost:5173",
+            "http://localhost:3000",
+        ];
+        
+        const isVercelPreview = origin.match(/^https:\/\/.*\.vercel\.app$/);
+        
+        if (allowedOrigins.indexOf(origin) !== -1 || isVercelPreview) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
 }));
 app.use('/uploads', express.static('uploads'));
 
