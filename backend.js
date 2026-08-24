@@ -5,6 +5,10 @@ import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
+import dotenv from 'dotenv';
+import process from 'process';
+
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -208,4 +212,8 @@ app.delete("/api/deleteuser", (req, res) => {
     }
 });
 
+app.get("/api/getclientid" , (req,res)=> {
+    const clientid = process.env.GOOGLE_CLIENT_ID;
+    res.send(clientid);
+})
 
