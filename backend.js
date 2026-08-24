@@ -15,10 +15,15 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
+// Update your CORS configuration to handle all Vercel preview deployments
 app.use(cors({
     origin: [
-        "https://bebeboutique-mohameddev822s-projects.vercel.app"
-    ]
+        "http://localhost:5173",
+        "https://bebeboutique-mohameddev822s-projects.vercel.app",
+        // Add wildcard for all Vercel preview deployments
+        /\.vercel\.app$/,
+    ],
+    credentials: true // Add this if you're using cookies/sessions
 }));
 app.use('/uploads', express.static('uploads'));
 
