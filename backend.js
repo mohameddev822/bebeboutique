@@ -22,8 +22,8 @@ app.use(cors({
         
         // Liste des origines autorisées
         const allowedOrigins = [
-            "https://bebeboutique-mohameddev822s-projects.vercel.app/:5173",
-            "https://bebeboutique-mohameddev822s-projects.vercel.app/:3000",
+            "http://localhost:5173",
+            "http://localhost:3000",
         ];
         
         const isVercelPreview = origin.match(/^https:\/\/.*\.vercel\.app$/);
@@ -52,7 +52,7 @@ app.listen(3000);
 app.post('/api/products', upload.single('image'), (req, res) => {
     try {
         const product = req.body;
-        const imageurl = req.file ? `https://bebeboutique-mohameddev822s-projects.vercel.app/:3000/uploads/${req.file.filename}` : null;    
+        const imageurl = req.file ? `http://localhost:3000/uploads/${req.file.filename}` : null;    
          
         const stmt = db.prepare('INSERT INTO products (name, description, price, age, image) VALUES (?, ?, ?, ?, ?)');
         const result = stmt.run(product.name, product.description, product.price, product.age, imageurl);
@@ -119,7 +119,7 @@ app.put('/api/products/:id', upload.single('image'), (req, res) => {
                     console.error('Error deleting old image:', err);
                 }
             }
-            imageurl = `https://bebeboutique-mohameddev822s-projects.vercel.app/:3000/uploads/${req.file.filename}`;
+            imageurl = `http://localhost:3000/uploads/${req.file.filename}`;
         }
         
         const stmt = db.prepare('UPDATE products SET name = ?, description = ?, price = ?, age = ?, image = ? WHERE id = ?');
