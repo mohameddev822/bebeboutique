@@ -17,7 +17,6 @@ const app = express();
 
 app.use(cors({
     origin: [
-        "http://localhost:5173",
         "https://bebeboutique-mohameddev822s-projects.vercel.app"
     ]
 }));
