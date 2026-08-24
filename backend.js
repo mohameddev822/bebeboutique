@@ -16,15 +16,10 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || 
-            origin.includes('localhost') || 
-            origin.includes('.vercel.app')) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    origin: [
+        "http://localhost:5173",
+        "https://bebeboutique-kn38h76op-mohameddev822s-projects.vercel.app/"
+    ]
 }));
 app.use('/uploads', express.static('uploads'));
 
