@@ -21,7 +21,7 @@ export default function Navbar() {
             }
 
             try {
-                const response = await axios.get('https://backend-guxumm0re-mohameddev822s-projects.vercel.app/api/getuser');
+                const response = await axios.get('https://backend-16xoh6qkq-mohameddev822s-projects.vercel.app//api/getuser');
                 if (response.data && response.data.isauthorizeduser === AUTHORIZED_EMAIL) {
                     setAuthorized(true);
                     localStorage.setItem('adminAuthorized', 'true');
@@ -49,7 +49,7 @@ export default function Navbar() {
                     setAuthorized(true);
                     localStorage.setItem('adminAuthorized', 'true');
 
-                    await axios.post('https://backend-guxumm0re-mohameddev822s-projects.vercel.app/api/saveuser', {
+                    await axios.post('https://backend-16xoh6qkq-mohameddev822s-projects.vercel.app//api/saveuser', {
                         isauthorizeduser: userInfo.email
                     });
                     

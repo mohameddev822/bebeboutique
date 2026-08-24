@@ -97,7 +97,7 @@ export default function Product({ authorized }) {
             }
 
             const response = await axios.put(
-                `https://backend-guxumm0re-mohameddev822s-projects.vercel.app/api/products/${editingProduct.id}`,
+                `https://backend-16xoh6qkq-mohameddev822s-projects.vercel.app//api/products/${editingProduct.id}`,
                 formData,
                 {
                     headers: {
@@ -107,7 +107,7 @@ export default function Product({ authorized }) {
             );
 
             if (response.data.success) {
-                const productsResponse = await axios.get('https://backend-guxumm0re-mohameddev822s-projects.vercel.app/api/products');
+                const productsResponse = await axios.get('https://backend-16xoh6qkq-mohameddev822s-projects.vercel.app//api/products');
                 setProducts(productsResponse.data);
                 handleCloseEditModal();
             }
@@ -122,7 +122,7 @@ export default function Product({ authorized }) {
         }
 
         try {
-            const response = await axios.delete(`https://backend-guxumm0re-mohameddev822s-projects.vercel.app/api/products/${productId}`);
+            const response = await axios.delete(`https://backend-16xoh6qkq-mohameddev822s-projects.vercel.app//api/products/${productId}`);
 
             if (response.data.success) {
                 setProducts(allproducts.filter(product => product.id !== productId));
@@ -152,7 +152,7 @@ export default function Product({ authorized }) {
     }, [allproducts]);
 
     useEffect(() => {
-        axios.get('https://backend-guxumm0re-mohameddev822s-projects.vercel.app/api/products')
+        axios.get('https://backend-16xoh6qkq-mohameddev822s-projects.vercel.app//api/products')
             .then(response => {
                 setProducts(response.data);
             })
