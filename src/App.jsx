@@ -1,15 +1,36 @@
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Navbar from "./sharedcomponents/Navbar";
 import axios from 'axios';
+import { useState, useEffect } from 'react';
 
 export default function App() {
- 
-   const response = axios.get("http://localhost:3000/api/getclientid");
+  const [clientId, setClientId] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchClientId = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/getclientid");
+        setClientId(response.data);
+      } catch (error) {
+        console.error('Error fetching client ID:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchClientId();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="overflow-y-auto h-screen font-serif w-full">
-      <GoogleOAuthProvider clientId={response.data} >
-      <Navbar></Navbar>
-     </GoogleOAuthProvider>
+      <GoogleOAuthProvider clientId={clientId}>
+        <Navbar />
+      </GoogleOAuthProvider>
     </div>
   );
 }
