@@ -18,7 +18,7 @@ export default function AdminForm() {
         formData.append('image', image);
 
         try {
-            await axios.post('https://backend-24nzmvbay-mohameddev822s-projects.vercel.app/api/products', formData);
+            await axios.post('https://backend-theta-gold-46.vercel.app/api/products', formData);
             setName('');
             setDescription('');
             setPrice('');
