@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 
 export default function App() {
   const [clientId, setClientId] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchClientId = async () => {
@@ -14,20 +13,19 @@ export default function App() {
         setClientId(response.data);
       } catch (error) {
         console.error('Error fetching client ID:', error);
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
 
     fetchClientId();
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
+  // Show loading state while fetching clientId
+  if (!clientId) {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
 
   return (
-    <div className="overflow-y-auto h-screen font-serif w-full">
+    <div className="min-h-screen w-full font-serif">
       <GoogleOAuthProvider clientId={clientId}>
         <Navbar />
       </GoogleOAuthProvider>
