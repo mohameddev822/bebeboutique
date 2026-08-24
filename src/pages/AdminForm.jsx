@@ -18,7 +18,7 @@ export default function AdminForm() {
         formData.append('image', image);
 
         try {
-            await axios.post('http://localhost:3000/api/products', formData);
+            await axios.post('https://backend-guxumm0re-mohameddev822s-projects.vercel.app/api/products', formData);
             // Réinitialiser le formulaire
             setName('');
             setDescription('');
