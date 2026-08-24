@@ -97,7 +97,7 @@ export default function Product({ authorized }) {
             }
 
             const response = await axios.put(
-                `http://localhost:3000/api/products/${editingProduct.id}`,
+                `https://bebeboutique-mohameddev822s-projects.vercel.app/:3000/api/products/${editingProduct.id}`,
                 formData,
                 {
                     headers: {
@@ -107,7 +107,7 @@ export default function Product({ authorized }) {
             );
 
             if (response.data.success) {
-                const productsResponse = await axios.get('http://localhost:3000/api/products');
+                const productsResponse = await axios.get('https://bebeboutique-mohameddev822s-projects.vercel.app/:3000/api/products');
                 setProducts(productsResponse.data);
                 handleCloseEditModal();
             }
@@ -122,7 +122,7 @@ export default function Product({ authorized }) {
         }
 
         try {
-            const response = await axios.delete(`http://localhost:3000/api/products/${productId}`);
+            const response = await axios.delete(`https://bebeboutique-mohameddev822s-projects.vercel.app/:3000/api/products/${productId}`);
 
             if (response.data.success) {
                 setProducts(allproducts.filter(product => product.id !== productId));
@@ -152,7 +152,7 @@ export default function Product({ authorized }) {
     }, [allproducts]);
 
     useEffect(() => {
-        axios.get('http://localhost:3000/api/products')
+        axios.get('https://bebeboutique-mohameddev822s-projects.vercel.app/:3000/api/products')
             .then(response => {
                 setProducts(response.data);
             })
