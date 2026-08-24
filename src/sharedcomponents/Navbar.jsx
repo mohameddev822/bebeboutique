@@ -60,9 +60,7 @@ export default function Navbar() {
                 console.error('Error during Google login:', error);
             }
         },
-        onError: (error) => {
-            console.log('Login Failed:', error);
-        },
+       
     });
 
     const handleLogout = () => {

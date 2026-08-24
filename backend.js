@@ -16,7 +16,10 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 app.use(cors({
-    origin: "http://localhost:5173"
+    origin: [
+        "http://localhost:5173",
+        "https://bebeboutique-mohameddev822s-projects.vercel.app"
+    ]
 }));
 app.use('/uploads', express.static('uploads'));
 
@@ -28,20 +31,17 @@ const upload = multer({ dest: 'uploads/' });
 // Drop and recreate table with age column
 db.exec('DROP TABLE IF EXISTS products');
 db.exec('CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, price INTEGER, age TEXT, image TEXT)');
-console.log('Database initialized');
 
-app.listen(3000, () => console.log("Server started on port 3000"));
+app.listen(3000);
 
 app.post('/api/products', upload.single('image'), (req, res) => {
     try {
         const product = req.body;
-        console.log(product);
         const imageurl = req.file ? `http://localhost:3000/uploads/${req.file.filename}` : null;    
          
         const stmt = db.prepare('INSERT INTO products (name, description, price, age, image) VALUES (?, ?, ?, ?, ?)');
         const result = stmt.run(product.name, product.description, product.price, product.age, imageurl);
         
-        console.log(`Product added: ${product.name}`);
         res.send({ success: true, id: result.lastInsertRowid });
     } catch (error) {
         console.error('Error adding product:', error);
@@ -53,8 +53,6 @@ app.get('/api/products', (req, res) => {
     try {
         const stmt = db.prepare('SELECT * FROM products');
         const products = stmt.all();
-        console.log(products);
-        console.log(`Fetched ${products.length} products`);
         res.send(products);
     } catch (error) {
         console.error('Error fetching products:', error);
@@ -112,7 +110,6 @@ app.put('/api/products/:id', upload.single('image'), (req, res) => {
         const stmt = db.prepare('UPDATE products SET name = ?, description = ?, price = ?, age = ?, image = ? WHERE id = ?');
         stmt.run(name, description, price, age, imageurl, productId);
         
-        console.log(`Product updated: ${name}`);
         res.send({ success: true, id: productId });
     } catch (error) {
         console.error('Error updating product:', error);
@@ -146,7 +143,6 @@ app.delete('/api/products/:id', (req, res) => {
         const stmt = db.prepare('DELETE FROM products WHERE id = ?');
         stmt.run(productId);
         
-        console.log(`Product deleted: ID ${productId}`);
         res.send({ success: true });
     } catch (error) {
         console.error('Error deleting product:', error);
@@ -171,11 +167,7 @@ app.post("/api/saveuser", (req, res) => {
         if (!existingUser) {
             const stmt = db.prepare('INSERT INTO users (isauthorizeduser) VALUES (?)');
             stmt.run(isauthorizeduser);
-            console.log(`User saved: ${isauthorizeduser}`);
-        } else {
-            console.log(`User already exists: ${isauthorizeduser}`);
-        }
-        
+        } 
         res.send({ success: true, email: isauthorizeduser });
     } catch (error) {
         console.error('Error saving user:', error);
@@ -192,7 +184,6 @@ app.get("/api/getuser", (req, res) => {
             return res.status(404).send({ error: 'No user found' });
         }
         
-        console.log(`User fetched: ${user.isauthorizeduser}`);
         res.send(user);
     } catch (error) {
         console.error('Error fetching user:', error);
@@ -204,7 +195,6 @@ app.delete("/api/deleteuser", (req, res) => {
     try {
         const stmt = db.prepare('DELETE FROM users');
         stmt.run();
-        console.log('User deleted (logged out)');
         res.send({ success: true });
     } catch (error) {
         console.error('Error deleting user:', error);
