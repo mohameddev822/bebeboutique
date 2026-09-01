@@ -18,16 +18,66 @@ export default function Navbar() {
     const [isLoading, setIsLoading] = useState(false);
     const AUTHORIZED_EMAIL = 'sihamnouali7@gmail.com';
 
-   const loginWithGoogle = useGoogleLogin({
-  onSuccess: (tokenResponse) => {
-    console.log(tokenResponse);
-    // tokenResponse contains access_token
-  },
-  onError: (error) => {
-    console.log('Login Failed:', error);
-  },
-});
-    
+    const loginWithGoogle = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            console.log('Token Response:', tokenResponse);
+            
+            try {
+                setIsLoading(true);
+                // Get user info using the access token
+                const userInfo = await axios.get(
+                    'https://www.googleapis.com/oauth2/v3/userinfo',
+                    {
+                        headers: {
+                            Authorization: `Bearer ${tokenResponse.access_token}`
+                        }
+                    }
+                );
+                
+                console.log('User Info:', userInfo.data);
+                
+                // Check if the email matches the authorized email
+                if (userInfo.data.email === AUTHORIZED_EMAIL) {
+                    setAuthorized(true);
+                    setShowProducts(true);
+                    localStorage.setItem('adminAuthorized', 'true');
+                    localStorage.setItem('userEmail', userInfo.data.email);
+                    console.log('Authorization successful!');
+                } else {
+                    alert(`Accès refusé. Seul ${AUTHORIZED_EMAIL} est autorisé.`);
+                }
+            } catch (error) {
+                console.error('Error fetching user info:', error);
+                alert('Erreur lors de la connexion. Veuillez réessayer.');
+            } finally {
+                setIsLoading(false);
+            }
+        },
+        onError: (error) => {
+            console.error('Login Failed:', error);
+            setIsLoading(false);
+            alert('Erreur de connexion. Veuillez réessayer.');
+        },
+        onNonOAuthError: (error) => {
+            console.error('Non-OAuth Error:', error);
+            setIsLoading(false);
+            alert('Erreur de configuration. Veuillez réessayer.');
+        },
+        flow: 'implicit', // Using implicit flow for simplicity
+        scope: 'email profile', // Request email and profile information
+    });
+
+    // Verify user on component mount
+    useState(() => {
+        const checkAuth = async () => {
+            const storedEmail = localStorage.getItem('userEmail');
+            if (storedEmail === AUTHORIZED_EMAIL) {
+                setAuthorized(true);
+                setShowProducts(true);
+            }
+        };
+        checkAuth();
+    }, []);
 
     const handleLogout = () => {
         setAuthorized(false);
@@ -35,6 +85,7 @@ export default function Navbar() {
         setShowAdmin(false);
         setIsMenuOpen(false);
         localStorage.removeItem('adminAuthorized');
+        localStorage.removeItem('userEmail');
     };
 
     const goToHome = () => {
