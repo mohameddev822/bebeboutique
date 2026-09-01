@@ -19,18 +19,11 @@ export default function Navbar() {
     const AUTHORIZED_EMAIL = 'sihamnouali7@gmail.com';
 
     const loginWithGoogle = useGoogleLogin({
-        onSuccess: async () => {
-            console.log('Google login successful');
-            
-        },
-        onError: (error) => {
-            console.error('Google login error:', error);
-            setIsLoading(false);
-            // Check if error has a message before trying to trim
-            const errorMessage = error?.error_description || error?.message || 'Failed to login with Google';
-            alert(errorMessage);
-        },
-    });
+    
+  onSuccess: codeResponse => console.log(codeResponse),
+  flow: 'auth-code',
+});
+        };
 
     const handleLogout = () => {
         setAuthorized(false);
