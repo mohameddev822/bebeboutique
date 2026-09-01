@@ -26,13 +26,9 @@ export default function Navbar() {
                     throw new Error('No access token received');
                 }
             
-                const userInfoResponse = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
-                    headers: {
-                        Authorization: `Bearer ${tokenResponse.access_token}`,
-                    },
-                });
+               
 
-                  console.log('User info response:', userInfoResponse);                
+                  console.log('User info response:');                
             } catch (error) {
                 console.error('Error during Google login:', error);
                 if (error.response) {
