@@ -1,10 +1,9 @@
 import logo from '../assets/logo.jpeg';
 import { useGoogleLogin } from '@react-oauth/google';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import AdminForm from '../pages/AdminForm';
 import HomePage from '../pages/HomePage';
 import Product from '../pages/Product';
-import axios from 'axios';
 
 export default function Navbar() {
     const [authorized, setAuthorized] = useState(false);
@@ -13,27 +12,7 @@ export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const AUTHORIZED_EMAIL = 'sihamnouali7@gmail.com';
 
-    useEffect(() => {
-        const checkStoredAuth = async () => {
-            const savedAuth = localStorage.getItem('adminAuthorized');
-            if (savedAuth === 'true') {
-                setAuthorized(true);
-                return;
-            }
-
-            try {
-                const response = await axios.get('https://backend-theta-gold-46.vercel.app/api/getuser');
-                if (response.data && response.data.isauthorizeduser === AUTHORIZED_EMAIL) {
-                    setAuthorized(true);
-                    localStorage.setItem('adminAuthorized', 'true');
-                }
-            } catch (error) {
-                console.error('Error checking authorization:', error);
-            }
-        };
-
-        checkStoredAuth();
-    }, []);
+    
 
     const loginWithGoogle = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
@@ -50,9 +29,6 @@ export default function Navbar() {
                     setAuthorized(true);
                     localStorage.setItem('adminAuthorized', 'true');
 
-                    await axios.post('https://backend-theta-gold-46.vercel.app/api/saveuser', {
-                        isauthorizeduser: userInfo.email
-                    });
                     
                     setShowProducts(true);
                     setShowAdmin(false);
