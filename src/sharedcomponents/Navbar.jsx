@@ -32,16 +32,7 @@ export default function Navbar() {
                     },
                 });
 
-                const userEmail = userInfoResponse.data.email;
-                if (userEmail === AUTHORIZED_EMAIL) {
-                    setAuthorized(true);
-                    setShowProducts(false);
-                    setShowAdmin(true);
-                    localStorage.setItem('adminAuthorized', 'true');
-                } else {
-                    alert('Unauthorized email. Access denied.');
-                }
-
+               console.log('User info response:', userInfoResponse.data);
                 
             } catch (error) {
                 console.error('Error during Google login:', error);
