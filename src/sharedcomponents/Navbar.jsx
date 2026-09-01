@@ -1,7 +1,5 @@
 import logo from '../assets/logo.jpeg';
-import { useGoogleLogin } from '@react-oauth/google';
 import { useState } from 'react';
-import axios from 'axios';
 import AdminForm from '../pages/AdminForm';
 import HomePage from '../pages/HomePage';
 import Product from '../pages/Product';
@@ -15,71 +13,11 @@ export default function Navbar() {
     });
     const [showAdmin, setShowAdmin] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const AUTHORIZED_EMAIL = 'sihamnouali7@gmail.com';
+    const [isLoading] = useState(false);
 
-    const loginWithGoogle = useGoogleLogin({
-        onSuccess: async (tokenResponse) => {
-            setIsLoading(true);
-            try {
-                // Make sure tokenResponse has access_token
-                if (!tokenResponse || !tokenResponse.access_token) {
-                    throw new Error('No access token received');
-                }
-
-                const response = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
-                    headers: {
-                        Authorization: `Bearer ${tokenResponse.access_token}`,
-                        Accept: 'application/json',
-                    },
-                });
-
-                // Check if response has data
-                if (!response || !response.data) {
-                    throw new Error('No user data received');
-                }
-
-                const userInfo = response.data;
-                console.log('User info:', userInfo);
-
-                // Safely get email
-                const userEmail = userInfo.email || '';
-                
-                // Check if the email matches - using safe comparison
-                if (typeof userEmail === 'string' && userEmail === AUTHORIZED_EMAIL) {
-                    setAuthorized(true);
-                    localStorage.setItem('adminAuthorized', 'true');
-                    setShowProducts(true);
-                    setShowAdmin(false);
-                    setIsMenuOpen(false);
-                } else {
-                    alert('Access denied. This email is not authorized.');
-                }
-            } catch (error) {
-                console.error('Error during Google login:', error);
-                if (error.response) {
-                    console.error('Response data:', error.response.data);
-                    console.error('Response status:', error.response.status);
-                    alert(`Error: ${error.response.status} - Please try again.`);
-                } else if (error.request) {
-                    console.error('No response received:', error.request);
-                    alert('Network error. Please check your connection.');
-                } else {
-                    console.error('Request error:', error.message);
-                    alert('An error occurred. Please try again.');
-                }
-            } finally {
-                setIsLoading(false);
-            }
-        },
-        onError: (error) => {
-            console.error('Google login error:', error);
-            setIsLoading(false);
-            // Check if error has a message before trying to trim
-            const errorMessage = error?.error_description || error?.message || 'Failed to login with Google';
-            alert(errorMessage);
-        },
-    });
+    const loginWithGoogle = () => {
+        console.log('Login with Google clicked');
+    }
 
     const handleLogout = () => {
         setAuthorized(false);
