@@ -15,11 +15,18 @@ export default function Navbar() {
     });
     const [showAdmin, setShowAdmin] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const AUTHORIZED_EMAIL = 'sihamnouali7@gmail.com';
 
     const loginWithGoogle = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
+            setIsLoading(true);
             try {
+                // Make sure tokenResponse has access_token
+                if (!tokenResponse || !tokenResponse.access_token) {
+                    throw new Error('No access token received');
+                }
+
                 const response = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
                     headers: {
                         Authorization: `Bearer ${tokenResponse.access_token}`,
@@ -27,11 +34,19 @@ export default function Navbar() {
                     },
                 });
 
+                // Check if response has data
+                if (!response || !response.data) {
+                    throw new Error('No user data received');
+                }
+
                 const userInfo = response.data;
                 console.log('User info:', userInfo);
 
-                // Check if the email matches
-                if (userInfo.email === AUTHORIZED_EMAIL) {
+                // Safely get email
+                const userEmail = userInfo.email || '';
+                
+                // Check if the email matches - using safe comparison
+                if (typeof userEmail === 'string' && userEmail.trim() === AUTHORIZED_EMAIL) {
                     setAuthorized(true);
                     localStorage.setItem('adminAuthorized', 'true');
                     setShowProducts(true);
@@ -43,25 +58,26 @@ export default function Navbar() {
             } catch (error) {
                 console.error('Error during Google login:', error);
                 if (error.response) {
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2xx
                     console.error('Response data:', error.response.data);
                     console.error('Response status:', error.response.status);
                     alert(`Error: ${error.response.status} - Please try again.`);
                 } else if (error.request) {
-                    // The request was made but no response was received
                     console.error('No response received:', error.request);
                     alert('Network error. Please check your connection.');
                 } else {
-                    // Something happened in setting up the request that triggered an Error
                     console.error('Request error:', error.message);
                     alert('An error occurred. Please try again.');
                 }
+            } finally {
+                setIsLoading(false);
             }
         },
         onError: (error) => {
             console.error('Google login error:', error);
-            alert('Failed to login with Google. Please try again.');
+            setIsLoading(false);
+            // Check if error has a message before trying to trim
+            const errorMessage = error?.error_description || error?.message || 'Failed to login with Google';
+            alert(errorMessage);
         },
     });
 
@@ -131,9 +147,10 @@ export default function Navbar() {
                             </button>
                             <button
                                 onClick={() => loginWithGoogle()}
-                                className="font-bold text-blue-600 hover:text-blue-800 text-sm sm:text-base whitespace-nowrap"
+                                disabled={isLoading}
+                                className="font-bold text-blue-600 hover:text-blue-800 text-sm sm:text-base whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                Se connecter avec Google 🚀
+                                {isLoading ? 'Connexion...' : 'Se connecter avec Google 🚀'}
                             </button>
                         </>
                     ) : (
@@ -186,9 +203,10 @@ export default function Navbar() {
                             </button>
                             <button
                                 onClick={() => loginWithGoogle()}
-                                className="block w-full text-left font-bold text-blue-600 hover:text-blue-800 py-2 px-3 hover:bg-gray-50 rounded-lg transition-colors"
+                                disabled={isLoading}
+                                className="block w-full text-left font-bold text-blue-600 hover:text-blue-800 py-2 px-3 hover:bg-gray-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                Se connecter avec Google 🚀
+                                {isLoading ? 'Connexion...' : 'Se connecter avec Google 🚀'}
                             </button>
                         </>
                     ) : (
