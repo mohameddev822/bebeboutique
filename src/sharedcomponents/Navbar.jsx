@@ -21,7 +21,7 @@ export default function Navbar() {
     const loginWithGoogle = useGoogleLogin({
     
   onSuccess: codeResponse => console.log(codeResponse),
-  flow: 'auth-code',
+  
 });
     
 
