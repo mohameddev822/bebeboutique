@@ -23,7 +23,7 @@ export default function Navbar() {
   onSuccess: codeResponse => console.log(codeResponse),
   flow: 'auth-code',
 });
-        };
+    
 
     const handleLogout = () => {
         setAuthorized(false);
