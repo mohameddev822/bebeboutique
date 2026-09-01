@@ -32,8 +32,7 @@ export default function Navbar() {
                     },
                 });
 
-               console.log('User info response:', userInfoResponse.data);
-                
+                  console.log('User info response:', userInfoResponse);                
             } catch (error) {
                 console.error('Error during Google login:', error);
                 if (error.response) {
