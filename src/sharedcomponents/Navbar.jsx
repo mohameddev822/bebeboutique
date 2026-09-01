@@ -46,7 +46,7 @@ export default function Navbar() {
                 const userEmail = userInfo.email || '';
                 
                 // Check if the email matches - using safe comparison
-                if (typeof userEmail === 'string' && userEmail.trim() === AUTHORIZED_EMAIL) {
+                if (typeof userEmail === 'string' && userEmail === AUTHORIZED_EMAIL) {
                     setAuthorized(true);
                     localStorage.setItem('adminAuthorized', 'true');
                     setShowProducts(true);
