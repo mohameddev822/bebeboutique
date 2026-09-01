@@ -19,32 +19,9 @@ export default function Navbar() {
     const AUTHORIZED_EMAIL = 'sihamnouali7@gmail.com';
 
     const loginWithGoogle = useGoogleLogin({
-        onSuccess: async (tokenResponse) => {
+        onSuccess: async () => {
             setIsLoading(true);
-            try {
-                if (!tokenResponse || !tokenResponse.access_token) {
-                    throw new Error('No access token received');
-                }
             
-               
-
-                  console.log('User info response:');                
-            } catch (error) {
-                console.error('Error during Google login:', error);
-                if (error.response) {
-                    console.error('Response data:', error.response.data);
-                    console.error('Response status:', error.response.status);
-                    alert(`Error: ${error.response.status} - Please try again.`);
-                } else if (error.request) {
-                    console.error('No response received:', error.request);
-                    alert('Network error. Please check your connection.');
-                } else {
-                    console.error('Request error:', error.message);
-                    alert('An error occurred. Please try again.');
-                }
-            } finally {
-                setIsLoading(false);
-            }
         },
         onError: (error) => {
             console.error('Google login error:', error);
