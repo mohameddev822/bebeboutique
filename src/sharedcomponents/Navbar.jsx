@@ -20,7 +20,7 @@ export default function Navbar() {
 
     const loginWithGoogle = useGoogleLogin({
         onSuccess: async () => {
-            setIsLoading(true);
+            console.log('Google login successful');
             
         },
         onError: (error) => {
