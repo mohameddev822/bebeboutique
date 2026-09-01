@@ -18,10 +18,14 @@ export default function Navbar() {
     const [isLoading, setIsLoading] = useState(false);
     const AUTHORIZED_EMAIL = 'sihamnouali7@gmail.com';
 
-    const loginWithGoogle = useGoogleLogin({
-    
-  onSuccess: codeResponse => console.log(codeResponse),
-  
+   const loginWithGoogle = useGoogleLogin({
+  onSuccess: (tokenResponse) => {
+    console.log(tokenResponse);
+    // tokenResponse contains access_token
+  },
+  onError: (error) => {
+    console.log('Login Failed:', error);
+  },
 });
     
 
