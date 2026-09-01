@@ -1,42 +1,67 @@
 import logo from '../assets/logo.jpeg';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useState } from 'react';
+import axios from 'axios';
 import AdminForm from '../pages/AdminForm';
 import HomePage from '../pages/HomePage';
 import Product from '../pages/Product';
 
 export default function Navbar() {
-    const [authorized, setAuthorized] = useState(false);
-    const [showProducts, setShowProducts] = useState(false);
+    const [authorized, setAuthorized] = useState(() => {
+        return localStorage.getItem('adminAuthorized') === 'true';
+    });
+    const [showProducts, setShowProducts] = useState(() => {
+        return localStorage.getItem('adminAuthorized') === 'true';
+    });
     const [showAdmin, setShowAdmin] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const AUTHORIZED_EMAIL = 'sihamnouali7@gmail.com';
 
-    
-
     const loginWithGoogle = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             try {
-                const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                const response = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
                     headers: {
                         Authorization: `Bearer ${tokenResponse.access_token}`,
+                        Accept: 'application/json',
                     },
                 });
 
-                const userInfo = await response.json();
+                const userInfo = response.data;
+                console.log('User info:', userInfo);
 
+                // Check if the email matches
                 if (userInfo.email === AUTHORIZED_EMAIL) {
                     setAuthorized(true);
                     localStorage.setItem('adminAuthorized', 'true');
-
-                    
                     setShowProducts(true);
                     setShowAdmin(false);
                     setIsMenuOpen(false);
-                } 
+                } else {
+                    alert('Access denied. This email is not authorized.');
+                }
             } catch (error) {
                 console.error('Error during Google login:', error);
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    console.error('Response data:', error.response.data);
+                    console.error('Response status:', error.response.status);
+                    alert(`Error: ${error.response.status} - Please try again.`);
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    console.error('No response received:', error.request);
+                    alert('Network error. Please check your connection.');
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.error('Request error:', error.message);
+                    alert('An error occurred. Please try again.');
+                }
             }
+        },
+        onError: (error) => {
+            console.error('Google login error:', error);
+            alert('Failed to login with Google. Please try again.');
         },
     });
 
@@ -105,7 +130,7 @@ export default function Navbar() {
                                 Découvrir nos produits
                             </button>
                             <button
-                                onClick={loginWithGoogle}
+                                onClick={() => loginWithGoogle()}
                                 className="font-bold text-blue-600 hover:text-blue-800 text-sm sm:text-base whitespace-nowrap"
                             >
                                 Se connecter avec Google 🚀
@@ -160,7 +185,7 @@ export default function Navbar() {
                                 Découvrir nos produits
                             </button>
                             <button
-                                onClick={loginWithGoogle}
+                                onClick={() => loginWithGoogle()}
                                 className="block w-full text-left font-bold text-blue-600 hover:text-blue-800 py-2 px-3 hover:bg-gray-50 rounded-lg transition-colors"
                             >
                                 Se connecter avec Google 🚀
