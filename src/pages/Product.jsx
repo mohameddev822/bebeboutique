@@ -1,5 +1,7 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export default function Product({ authorized }) {
     const [allproducts, setProducts] = useState([]);
@@ -423,11 +425,11 @@ export default function Product({ authorized }) {
                 </div>
             )}
 
-            {/* Description Modal with Multiple Images */}
+            {/* Description Modal with Markdown Support */}
             {showDescriptionModal && selectedProduct && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                        <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-4 sm:px-6 py-3 sm:py-4 rounded-t-2xl flex justify-between items-center">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+                        <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-4 sm:px-6 py-3 sm:py-4 rounded-t-2xl flex justify-between items-center sticky top-0 z-10">
                             <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
                                 📖 Description détaillée
                             </h2>
@@ -440,6 +442,7 @@ export default function Product({ authorized }) {
                         </div>
 
                         <div className="p-4 sm:p-6 space-y-4">
+                            {/* Images Gallery */}
                             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
                                 <div className="relative w-full sm:w-64">
                                     <img
@@ -474,9 +477,9 @@ export default function Product({ authorized }) {
                                         </>
                                     )}
                                 </div>
-                                <div className="text-center sm:text-left">
+                                <div className="text-center sm:text-left flex-1">
                                     <h3 className="text-lg sm:text-xl font-bold text-gray-800">{selectedProduct.name}</h3>
-                                    <p className="text-pink-600 font-semibold">{selectedProduct.price} DHS</p>
+                                    <p className="text-pink-600 font-semibold text-lg">{selectedProduct.price} DHS</p>
                                     <p className="text-sm text-gray-500">
                                         <span className="font-medium">Age:</span> {selectedProduct.age || 'Non spécifié'}
                                     </p>
@@ -488,12 +491,61 @@ export default function Product({ authorized }) {
                                 </div>
                             </div>
 
+                            {/* Description with Markdown */}
                             <div className="border-t border-gray-200 pt-4">
-                                <h4 className="font-semibold text-gray-700 mb-2">Description :</h4>
-                                <p className="text-gray-600 leading-relaxed whitespace-pre-wrap text-sm sm:text-base">
-                                    {selectedProduct.description}
-                                </p>
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span className="text-sm font-semibold text-gray-700">📝 Description</span>
+                                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
+                                        Formaté
+                                    </span>
+                                </div>
+                                <div className="prose prose-sm max-w-none text-gray-700 leading-relaxed">
+                                    <ReactMarkdown
+                                        remarkPlugins={[remarkGfm]}
+                                        components={{
+                                            h1: ({...props}) => <h1 className="text-2xl font-bold text-gray-800 mt-4 mb-3" {...props} />,
+                                            h2: ({...props}) => <h2 className="text-xl font-semibold text-gray-800 mt-3 mb-2" {...props} />,
+                                            h3: ({...props}) => <h3 className="text-lg font-semibold text-gray-800 mt-3 mb-2" {...props} />,
+                                            h4: ({...props}) => <h4 className="text-base font-semibold text-gray-800 mt-2 mb-1.5" {...props} />,
+                                            h5: ({...props}) => <h5 className="text-sm font-semibold text-gray-700 mt-2 mb-1" {...props} />,
+                                            h6: ({...props}) => <h6 className="text-xs font-semibold text-gray-600 mt-1.5 mb-1" {...props} />,
+                                            p: ({...props}) => <p className="text-sm leading-relaxed mb-3 text-gray-700" {...props} />,
+                                            ul: ({...props}) => <ul className="list-disc pl-5 mb-3 space-y-1" {...props} />,
+                                            ol: ({...props}) => <ol className="list-decimal pl-5 mb-3 space-y-1" {...props} />,
+                                            li: ({...props}) => <li className="text-sm text-gray-700" {...props} />,
+                                            strong: ({...props}) => <strong className="font-semibold text-gray-800" {...props} />,
+                                            em: ({...props}) => <em className="italic text-gray-600" {...props} />,
+                                            del: ({...props}) => <del className="text-gray-400" {...props} />,
+                                            blockquote: ({...props}) => <blockquote className="border-l-4 border-blue-300 pl-4 italic text-gray-600 my-3" {...props} />,
+                                            code: ({inline, ...props}) => 
+                                                inline ? 
+                                                    <code className="bg-gray-100 px-1.5 py-0.5 rounded text-pink-600 text-xs" {...props} /> :
+                                                    <code className="block bg-gray-100 p-3 rounded-lg text-sm overflow-x-auto" {...props} />,
+                                            pre: ({...props}) => <pre className="bg-gray-100 p-3 rounded-lg overflow-x-auto mb-3" {...props} />,
+                                            a: ({...props}) => <a className="text-blue-600 hover:text-blue-800 underline" {...props} />,
+                                            img: ({...props}) => <img className="max-w-full h-auto rounded-lg my-2" {...props} />,
+                                            hr: ({...props}) => <hr className="my-4 border-gray-200" {...props} />,
+                                            table: ({...props}) => (
+                                                <div className="overflow-x-auto my-3 border border-gray-200 rounded-lg">
+                                                    <table className="min-w-full divide-y divide-gray-200" {...props} />
+                                                </div>
+                                            ),
+                                            thead: ({...props}) => <thead className="bg-gray-50" {...props} />,
+                                            tbody: ({...props}) => <tbody className="bg-white divide-y divide-gray-200" {...props} />,
+                                            tr: ({...props}) => <tr className="hover:bg-gray-50 transition-colors" {...props} />,
+                                            th: ({...props}) => (
+                                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" {...props} />
+                                            ),
+                                            td: ({...props}) => (
+                                                <td className="px-4 py-2 text-sm text-gray-700" {...props} />
+                                            ),
+                                        }}
+                                    >
+                                        {selectedProduct.description}
+                                    </ReactMarkdown>
+                                </div>
                             </div>
+
                             {!authorized && 
                                 <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
                                     <button
@@ -516,7 +568,7 @@ export default function Product({ authorized }) {
             {showEditModal && editingProduct && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                        <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-4 sm:px-6 py-3 sm:py-4 rounded-t-2xl flex justify-between items-center">
+                        <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-4 sm:px-6 py-3 sm:py-4 rounded-t-2xl flex justify-between items-center sticky top-0 z-10">
                             <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
                                 ✏️ Modifier le produit
                             </h2>
@@ -655,7 +707,6 @@ export default function Product({ authorized }) {
                                 {/* Affichage toujours en grille si plusieurs images, sinon une seule image */}
                                 <div className="relative">
                                     {hasMultipleImages ? (
-                                        // Affichage en grille quand il y a plusieurs images
                                         <div className="relative">
                                             <div className="grid grid-cols-2 gap-1 p-1 bg-gray-50">
                                                 {productImages.map((img, idx) => (
@@ -679,7 +730,6 @@ export default function Product({ authorized }) {
                                             </div>
                                         </div>
                                     ) : (
-                                        // Affichage normal (une seule image)
                                         <div className="h-48 sm:h-56 md:h-64 overflow-hidden bg-gray-50 relative">
                                             <img 
                                                 src={productImages[0]} 
