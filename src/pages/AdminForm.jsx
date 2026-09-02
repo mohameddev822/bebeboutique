@@ -149,15 +149,6 @@ export default function AdminForm() {
                                     Description <span className="text-red-500">*</span>
                                 </label>
                                 <div className="flex flex-wrap items-center gap-2">
-                                    <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            checked={useAIDescription}
-                                            onChange={(e) => setUseAIDescription(e.target.checked)}
-                                            className="w-4 h-4 text-pink-500 rounded focus:ring-pink-400"
-                                        />
-                                        Utiliser l'IA
-                                    </label>
                                     <button
                                         type="button"
                                         onClick={generateAIDescription}
@@ -219,7 +210,7 @@ export default function AdminForm() {
         </div>
     </div>
 )}
-                            {useAIDescription && (
+                            
                                 <div className="mt-2">
                                     <label className="block text-sm font-medium text-gray-700 mb-1">
                                         Mots-clés (optionnel)
@@ -232,7 +223,7 @@ export default function AdminForm() {
                                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none text-sm"
                                     />
                                 </div>
-                            )}
+                        
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
@@ -288,7 +279,6 @@ export default function AdminForm() {
                                 />
                             </div>
                             
-                            {/* Image Previews */}
                             {imagePreviews.length > 0 && (
                                 <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                                     {imagePreviews.map((preview, index) => (
