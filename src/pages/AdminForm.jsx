@@ -138,7 +138,7 @@ export default function AdminForm() {
                                     <button
                                         type="button"
                                         onClick={generateAIDescription}
-                                        disabled={isGenerating || !name}
+                                        disabled={prompt === ''}
                                         className={`px-3 py-1 text-xs sm:text-sm rounded-lg font-medium transition-all ${
                                             isGenerating || !name
                                                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
