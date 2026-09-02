@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useState } from 'react';
-
+import { ReactMarkdown } from 'react-markdown';
 export default function AdminForm() {
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
@@ -50,7 +50,7 @@ export default function AdminForm() {
             });
             
             if (response.data) {
-                setDescription(response.data);
+                setDescription(response.data.);
             }
         } catch (error) {
             console.error('Error generating description:', error);
@@ -173,7 +173,7 @@ export default function AdminForm() {
                             <textarea
                                 id="description"
                                 name="description"
-                                value={description}
+                                value={<ReactMarkdown>{description}</ReactMarkdown>}
                                 onChange={(e) => setDescription(e.target.value)}
                                 required
                                 rows="4"
