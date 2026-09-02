@@ -25,7 +25,6 @@ export default function AdminForm() {
         const newImages = [...images];
         const newPreviews = [...imagePreviews];
         
-        // Revoke the object URL to free memory
         URL.revokeObjectURL(newPreviews[index]);
         
         newImages.splice(index, 1);
@@ -46,7 +45,8 @@ export default function AdminForm() {
             const response = await axios.post('https://backend-theta-gold-46.vercel.app/api/generate-description', {
                 productName: name,
                 age: age,
-                keywords: keywords
+                keywords: keywords,
+                price: price
             });
             
             if (response.data) {
