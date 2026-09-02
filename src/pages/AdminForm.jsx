@@ -10,9 +10,8 @@ export default function AdminForm() {
     const [images, setImages] = useState([]);
     const [imagePreviews, setImagePreviews] = useState([]);
     const [age, setAge] = useState('');
-    const [isGenerating, setIsGenerating] = useState(false);
     const [useAIDescription, setUseAIDescription] = useState(false);
-    const [prompt, setPrompt] = useState('');
+    const [prompt, setPrompt] = useState(false);
 
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
@@ -41,7 +40,7 @@ export default function AdminForm() {
             return;
         }
 
-        setIsGenerating(true);
+        setPrompt(true);
             const response = await axios.post('https://backend-theta-gold-46.vercel.app/api/generate-description', {
                 prompt: prompt,
             });
@@ -49,7 +48,7 @@ export default function AdminForm() {
             if (response.data) {
                 setDescription(response.data.description || response.data);
             }
-            setIsGenerating(false);
+            setPrompt(false);
         };
 
     const handleSubmit = async (e) => {
@@ -138,7 +137,7 @@ export default function AdminForm() {
                                     <button
                                         type="button"
                                         onClick={generateAIDescription}
-                                        disabled={prompt === ''}
+                                        disabled={!prompt}
                                         className={`px-3 py-1 text-xs sm:text-sm rounded-lg font-medium transition-all ${
                                              !prompt
                                                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
