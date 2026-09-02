@@ -1,6 +1,6 @@
 import logo from '../assets/logo.jpeg';
 import { useGoogleLogin } from '@react-oauth/google';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import AdminForm from '../pages/AdminForm';
 import HomePage from '../pages/HomePage';
@@ -68,7 +68,7 @@ export default function Navbar() {
     });
 
     // Verify user on component mount
-    useState(() => {
+    useEffect(() => {
         const checkAuth = async () => {
             const storedEmail = localStorage.getItem('userEmail');
             if (storedEmail === AUTHORIZED_EMAIL) {
