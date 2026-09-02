@@ -180,16 +180,42 @@ export default function AdminForm() {
                                 placeholder="Entrez la description du produit ou utilisez l'IA pour la générer"
                                 className="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition-all text-gray-700 placeholder-gray-400 resize-y hover:border-gray-400 text-sm sm:text-base"
                             />
-                            {description && useAIDescription && (
-                                <div className="mt-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                                    <h4 className="text-sm font-semibold text-gray-700 mb-2">📋 Aperçu formaté :</h4>
-                                    <div className="prose prose-sm max-w-none text-gray-700 leading-relaxed text-sm">
-                                        <ReactMarkdown>
-                                            {description}
-                                        </ReactMarkdown>
-                                    </div>
-                                </div>
-                            )}
+                          {description && useAIDescription && (
+    <div className="mt-4 p-5 bg-gradient-to-br from-white to-gray-50 rounded-xl border border-gray-200 shadow-sm">
+        <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-200">
+            <span className="text-lg">📝</span>
+            <h4 className="text-sm font-semibold text-gray-700">Aperçu de la description générée</h4>
+            <span className="ml-auto text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                ✨ IA
+            </span>
+        </div>
+        <div className="prose prose-sm max-w-none text-gray-700 leading-relaxed">
+            <ReactMarkdown
+                components={{
+                    h1: ({...props}) => <h1 className="text-xl font-bold text-gray-800 mt-3 mb-2" {...props} />,
+                    h2: ({ ...props}) => <h2 className="text-lg font-semibold text-gray-800 mt-3 mb-2" {...props} />,
+                    h3: ({...props}) => <h3 className="text-base font-semibold text-gray-800 mt-2 mb-1.5" {...props} />,
+                    p: ({...props}) => <p className="text-sm leading-relaxed mb-2 text-gray-700" {...props} />,
+                    ul: ({ ...props}) => <ul className="list-disc pl-5 mb-2 space-y-1" {...props} />,
+                    ol: ({ ...props}) => <ol className="list-decimal pl-5 mb-2 space-y-1" {...props} />,
+                    li: ({ ...props}) => <li className="text-sm text-gray-700" {...props} />,
+                    strong: ({...props}) => <strong className="font-semibold text-gray-800" {...props} />,
+                    em: ({...props}) => <em className="italic text-gray-600" {...props} />,
+                    blockquote: ({...props}) => <blockquote className="border-l-4 border-pink-300 pl-4 italic text-gray-600 my-2" {...props} />,
+                }}
+            >
+                {description}
+            </ReactMarkdown>
+        </div>
+        <div className="mt-3 pt-2 border-t border-gray-200 flex items-center gap-3 text-xs text-gray-400">
+            <span>✅ Description prête à être utilisée</span>
+            <span className="w-px h-3 bg-gray-300"></span>
+            <span>📊 {description.split(' ').length} mots</span>
+            <span className="w-px h-3 bg-gray-300"></span>
+            <span>⏱️ Générée par IA</span>
+        </div>
+    </div>
+)}
                             {useAIDescription && (
                                 <div className="mt-2">
                                     <label className="block text-sm font-medium text-gray-700 mb-1">
