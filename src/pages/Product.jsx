@@ -26,7 +26,7 @@ export default function Product({ authorized }) {
     });
     const [imagePreviews, setImagePreviews] = useState([]);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [expandedProductId, setExpandedProductId] = useState(null); // Nouvel état pour suivre le produit agrandi
+    const [expandedProductId, setExpandedProductId] = useState(null);
     const MAX_LENGTH = 100;
 
     const handleOpenModal = (productId) => {
@@ -42,7 +42,6 @@ export default function Product({ authorized }) {
         setCurrentImageIndex(0);
     };
 
-    // Toggle pour afficher/masquer toutes les images d'un produit
     const toggleImageGrid = (productId) => {
         if (expandedProductId === productId) {
             setExpandedProductId(null);
@@ -51,7 +50,6 @@ export default function Product({ authorized }) {
         }
     };
 
-    // Image navigation for modal
     const nextImage = () => {
         if (selectedProduct && selectedProduct.images) {
             setCurrentImageIndex((prev) => 
@@ -667,21 +665,33 @@ export default function Product({ authorized }) {
                                 <div className="relative">
                                     {isExpanded && productImages.length > 1 ? (
                                         // Affichage en grille quand il y a plusieurs images
-                                        <div className="grid grid-cols-2 gap-1 p-1 bg-gray-50">
-                                            {productImages.map((img, idx) => (
-                                                <div key={idx} className="relative aspect-square overflow-hidden rounded-lg">
-                                                    <img 
-                                                        src={img} 
-                                                        alt={`${product.name} - image ${idx + 1}`} 
-                                                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                                                    />
-                                                    {idx === 0 && (
-                                                        <div className="absolute top-1 left-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">
-                                                            Principal
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            ))}
+                                        <div className="relative">
+                                            <div className="grid grid-cols-2 gap-1 p-1 bg-gray-50">
+                                                {productImages.map((img, idx) => (
+                                                    <div key={idx} className="relative aspect-square overflow-hidden rounded-lg">
+                                                        <img 
+                                                            src={img} 
+                                                            alt={`${product.name} - image ${idx + 1}`} 
+                                                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                                        />
+                                                        {idx === 0 && (
+                                                            <div className="absolute top-1 left-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">
+                                                                Principal
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <button
+                                                onClick={() => toggleImageGrid(product.id)}
+                                                className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-black/60 hover:bg-black/80 text-white text-xs px-3 py-1.5 rounded-full transition-colors flex items-center gap-1 z-10"
+                                            >
+                                                🔼 Voir moins
+                                            </button>
+                                            <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 z-10">
+                                                <span>📸</span>
+                                                {productImages.length}
+                                            </div>
                                         </div>
                                     ) : (
                                         // Affichage normal (une seule image)
@@ -693,16 +703,16 @@ export default function Product({ authorized }) {
                                             />
                                             {productImages.length > 1 && (
                                                 <>
-                                                    <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                                                    <button
+                                                        onClick={() => toggleImageGrid(product.id)}
+                                                        className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-black/60 hover:bg-black/80 text-white text-xs px-3 py-1.5 rounded-full transition-colors flex items-center gap-1 z-10"
+                                                    >
+                                                        👁️ Voir toutes ({productImages.length})
+                                                    </button>
+                                                    <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 z-10">
                                                         <span>📸</span>
                                                         {productImages.length}
                                                     </div>
-                                                    <button
-                                                        onClick={() => toggleImageGrid(product.id)}
-                                                        className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-black/60 hover:bg-black/80 text-white text-xs px-3 py-1.5 rounded-full transition-colors flex items-center gap-1"
-                                                    >
-                                                        {isExpanded ? '🔼 Voir moins' : `👁️ Voir toutes (${productImages.length})`}
-                                                    </button>
                                                 </>
                                             )}
                                         </div>
