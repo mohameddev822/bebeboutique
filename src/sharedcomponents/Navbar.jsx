@@ -20,9 +20,8 @@ export default function Navbar() {
 
     const loginWithGoogle = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
-            console.log('Token Response:', tokenResponse);
             
-            try {
+            
                 setIsLoading(true);
                 // Get user info using the access token
                 const userInfo = await axios.get(
@@ -34,7 +33,6 @@ export default function Navbar() {
                     }
                 );
                 
-                console.log('User Info:', userInfo.data);
                 
                 // Check if the email matches the authorized email
                 if (userInfo.data.email === AUTHORIZED_EMAIL) {
@@ -42,29 +40,19 @@ export default function Navbar() {
                     setShowProducts(true);
                     localStorage.setItem('adminAuthorized', 'true');
                     localStorage.setItem('userEmail', userInfo.data.email);
-                    console.log('Authorization successful!');
                 } else {
                     alert(`Accès refusé. Seul ${AUTHORIZED_EMAIL} est autorisé.`);
                 }
-            } catch (error) {
-                console.error('Error fetching user info:', error);
-                alert('Erreur lors de la connexion. Veuillez réessayer.');
-            } finally {
-                setIsLoading(false);
-            }
+           
         },
-        onError: (error) => {
-            console.error('Login Failed:', error);
+        onError: () => {
             setIsLoading(false);
-            alert('Erreur de connexion. Veuillez réessayer.');
         },
-        onNonOAuthError: (error) => {
-            console.error('Non-OAuth Error:', error);
+        onNonOAuthError: () => {
             setIsLoading(false);
-            alert('Erreur de configuration. Veuillez réessayer.');
         },
-        flow: 'implicit', // Using implicit flow for simplicity
-        scope: 'email profile', // Request email and profile information
+        flow: 'implicit', 
+        scope: 'email profile', 
     });
 
     // Verify user on component mount

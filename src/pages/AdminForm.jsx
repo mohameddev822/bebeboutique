@@ -43,7 +43,6 @@ export default function AdminForm() {
         }
 
         setIsGenerating(true);
-        try {
             const response = await axios.post('https://backend-theta-gold-46.vercel.app/api/generate-description', {
                 productName: name,
                 age: age,
@@ -54,13 +53,8 @@ export default function AdminForm() {
             if (response.data) {
                 setDescription(response.data.description || response.data);
             }
-        } catch (error) {
-            console.error('Error generating description:', error);
-            alert('Erreur lors de la génération de la description');
-        } finally {
             setIsGenerating(false);
-        }
-    };
+        };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -82,7 +76,7 @@ export default function AdminForm() {
             formData.append('images', image);
         });
 
-        try {
+        
             await axios.post('https://backend-theta-gold-46.vercel.app/api/products', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
@@ -99,11 +93,7 @@ export default function AdminForm() {
             setKeywords('');
             setUseAIDescription(false);
             
-            alert('✅ Produit ajouté avec succès !');
-        } catch (error) {
-            console.error('Error adding product:', error);
-            alert('❌ Erreur lors de l\'ajout du produit');
-        }
+        
     };
 
     return (
@@ -173,7 +163,7 @@ export default function AdminForm() {
                                 placeholder="Entrez la description du produit ou utilisez l'IA pour la générer"
                                 className="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition-all text-gray-700 placeholder-gray-400 resize-y hover:border-gray-400 text-sm sm:text-base"
                             />
-                          {description && useAIDescription && (
+                          {description && (
     <div className="mt-4 p-5 bg-gradient-to-br from-white to-gray-50 rounded-xl border border-gray-200 shadow-sm">
         <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-200">
             <span className="text-lg">📝</span>

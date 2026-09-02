@@ -9,14 +9,10 @@ export default function App() {
 
   useEffect(() => {
     const fetchClientId = async () => {
-      try {
         const response = await axios.get("https://backend-theta-gold-46.vercel.app/api/getclientid");
-        // Extract clientId from response - handle both string and object responses
         const id = typeof response.data === 'string' ? response.data : response.data.clientId;
         setClientId(id);
-      } catch (error) {
-        console.error('Error fetching client ID:', error);
-      } 
+     
     };
 
     fetchClientId();

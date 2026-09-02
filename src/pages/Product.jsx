@@ -104,7 +104,7 @@ export default function Product({ authorized }) {
     const handleUpdateProduct = async (e) => {
         e.preventDefault();
 
-        try {
+        
             const formData = new FormData();
             formData.append('name', editForm.name);
             formData.append('description', editForm.description);
@@ -131,9 +131,7 @@ export default function Product({ authorized }) {
                 setProducts(productsResponse.data);
                 handleCloseEditModal();
             }
-        } catch (error) {
-            console.error('Error updating product:', error);
-        }
+       
     };
 
     const handleDeleteProduct = async (productId) => {
@@ -141,7 +139,6 @@ export default function Product({ authorized }) {
             return;
         }
 
-        try {
             const response = await axios.delete(`https://backend-theta-gold-46.vercel.app/api/products/${productId}`);
 
             if (response.data.success) {
@@ -151,9 +148,7 @@ export default function Product({ authorized }) {
                     setOrder(order.filter(item => item.id !== productId));
                 }
             }
-        } catch (error) {
-            console.error('Error deleting product:', error);
-        }
+        
     };
 
     useEffect(() => {
@@ -176,9 +171,7 @@ export default function Product({ authorized }) {
             .then(response => {
                 setProducts(response.data);
             })
-            .catch(error => {
-                console.error('Error fetching products:', error);
-            });
+            
     }, []);
 
     const handlePanier = (productId) => {
