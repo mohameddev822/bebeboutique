@@ -140,7 +140,7 @@ export default function AdminForm() {
                                         onClick={generateAIDescription}
                                         disabled={prompt === ''}
                                         className={`px-3 py-1 text-xs sm:text-sm rounded-lg font-medium transition-all ${
-                                            isGenerating || !name
+                                            isGenerating || !prompt
                                                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                                 : 'bg-purple-500 hover:bg-purple-600 text-white'
                                         }`}
