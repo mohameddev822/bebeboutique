@@ -272,15 +272,15 @@ export default function Product({ authorized }) {
     const stripMarkdown = (text) => {
         if (!text) return '';
         return text
-            .replace(/#{1,6}\s/g, '') // Enlever les titres
-            .replace(/\*\*/g, '') // Enlever le gras
-            .replace(/\*/g, '') // Enlever l'italique
-            .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Enlever les liens
-            .replace(/!\[([^\]]*)\]\([^)]+\)/g, '$1') // Enlever les images
-            .replace(/`{1,3}[^`]*`{1,3}/g, '') // Enlever le code
-            .replace(/\|/g, '') // Enlever les tableaux
-            .replace(/---/g, '') // Enlever les séparateurs
-            .replace(/\n{2,}/g, '\n') // Réduire les sauts de ligne
+            .replace(/#{1,6}\s/g, '')
+            .replace(/\*\*/g, '')
+            .replace(/\*/g, '')
+            .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+            .replace(/!\[([^\]]*)\]\([^)]+\)/g, '$1')
+            .replace(/`{1,3}[^`]*`{1,3}/g, '')
+            .replace(/\|/g, '')
+            .replace(/---/g, '')
+            .replace(/\n{2,}/g, '\n')
             .trim();
     };
 
@@ -443,14 +443,14 @@ export default function Product({ authorized }) {
                             <div className="flex flex-col items-center gap-3">
                                 <div className="w-full">
                                     {selectedProduct.images && selectedProduct.images.length > 1 ? (
-                                        // Grille d'images
                                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                                             {selectedProduct.images.map((img, idx) => (
-                                                <div key={idx} className="relative aspect-square overflow-hidden rounded-lg border border-gray-200">
+                                                <div key={idx} className="relative aspect-square overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
                                                     <img 
                                                         src={img} 
                                                         alt={`${selectedProduct.name} - image ${idx + 1}`} 
-                                                        className="w-full h-full  hover:scale-105 transition-transform duration-300"
+                                                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                                        loading="lazy"
                                                     />
                                                     {idx === 0 && (
                                                         <div className="absolute top-1 left-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">
@@ -461,12 +461,12 @@ export default function Product({ authorized }) {
                                             ))}
                                         </div>
                                     ) : (
-                                        // Une seule image
-                                        <div className="relative w-full aspect-square max-h-64 overflow-hidden rounded-lg border border-gray-200">
+                                        <div className="relative w-full aspect-square max-h-64 overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
                                             <img 
                                                 src={selectedProduct.images?.[0] || selectedProduct.image} 
                                                 alt={selectedProduct.name} 
-                                                className="w-full h-full "
+                                                className="w-full h-full object-contain"
+                                                loading="lazy"
                                             />
                                         </div>
                                     )}
@@ -654,7 +654,7 @@ export default function Product({ authorized }) {
                                                     <img
                                                         src={preview}
                                                         alt={`Preview ${index + 1}`}
-                                                        className="w-full h-20 sm:h-24  rounded-lg border border-gray-200"
+                                                        className="w-full h-20 sm:h-24 object-cover rounded-lg border border-gray-200"
                                                     />
                                                     <button
                                                         type="button"
@@ -701,18 +701,19 @@ export default function Product({ authorized }) {
                             : plainTextDescription;
                         
                         return (
-                            <div key={product.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200 border border-gray-100 relative">
+                            <div key={product.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 border border-gray-100 relative group">
                                 {/* Affichage toujours en grille si plusieurs images, sinon une seule image */}
-                                <div className="relative">
+                                <div className="relative overflow-hidden bg-gray-100">
                                     {hasMultipleImages ? (
                                         <div className="relative">
-                                            <div className="grid grid-cols-2 gap-1 p-1 bg-gray-50">
-                                                {productImages.map((img, idx) => (
-                                                    <div key={idx} className="relative aspect-square overflow-hidden rounded-lg">
+                                            <div className="grid grid-cols-2 gap-0.5">
+                                                {productImages.slice(0, 4).map((img, idx) => (
+                                                    <div key={idx} className="relative aspect-square overflow-hidden">
                                                         <img 
                                                             src={img} 
                                                             alt={`${product.name} - image ${idx + 1}`} 
-                                                            className="w-full h-full  hover:scale-105 transition-transform duration-300"
+                                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                                            loading="lazy"
                                                         />
                                                         {idx === 0 && (
                                                             <div className="absolute top-1 left-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">
@@ -721,38 +722,44 @@ export default function Product({ authorized }) {
                                                         )}
                                                     </div>
                                                 ))}
+                                                {productImages.length > 4 && (
+                                                    <div className="relative aspect-square overflow-hidden bg-black/80 flex items-center justify-center">
+                                                        <span className="text-white font-bold text-lg">+{productImages.length - 4}</span>
+                                                    </div>
+                                                )}
                                             </div>
-                                            <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 z-10">
+                                            <div className="absolute top-2 right-2 bg-black/70 text-white text-xs px-2.5 py-1 rounded-full flex items-center gap-1 z-10 backdrop-blur-sm">
                                                 <span>📸</span>
                                                 {productImages.length}
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="h-48 sm:h-56 md:h-64 overflow-hidden bg-gray-50 relative">
+                                        <div className="aspect-square overflow-hidden">
                                             <img 
                                                 src={productImages[0]} 
                                                 alt={product.name} 
-                                                className="w-full h-full  hover:scale-105 transition-transform duration-300" 
+                                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                                loading="lazy"
                                             />
                                         </div>
                                     )}
                                 </div>
 
-                                <div className="p-3 sm:p-4 space-y-2">
-                                    <div className="flex justify-between items-start">
-                                        <h2 className="text-base sm:text-lg font-semibold text-gray-800">{product.name}</h2>
+                                <div className="p-4 space-y-2">
+                                    <div className="flex justify-between items-start gap-2">
+                                        <h2 className="text-base font-semibold text-gray-800 line-clamp-1">{product.name}</h2>
                                         {authorized && (
-                                            <div className="flex gap-1">
+                                            <div className="flex gap-1 flex-shrink-0">
                                                 <button
                                                     onClick={() => handleOpenEditModal(product)}
-                                                    className="text-blue-500 hover:text-blue-700 transition-colors p-1 text-sm sm:text-base"
+                                                    className="text-blue-500 hover:text-blue-700 transition-colors p-1 text-sm"
                                                     title="Modifier"
                                                 >
                                                     ✏️
                                                 </button>
                                                 <button
                                                     onClick={() => handleDeleteProduct(product.id)}
-                                                    className="text-red-500 hover:text-red-700 transition-colors p-1 text-sm sm:text-base"
+                                                    className="text-red-500 hover:text-red-700 transition-colors p-1 text-sm"
                                                     title="Supprimer"
                                                 >
                                                     🗑️
@@ -761,34 +768,38 @@ export default function Product({ authorized }) {
                                         )}
                                     </div>
 
-                                    <div className="relative">
-                                        <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
+                                    <div className="min-h-[40px]">
+                                        <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
                                             {truncatedDescription}
                                         </p>
                                         {plainTextDescription.length > MAX_LENGTH && (
                                             <button
                                                 onClick={() => handleOpenModal(product.id)}
-                                                className="text-blue-600 hover:text-blue-800 text-xs sm:text-sm font-medium mt-1 inline-block"
+                                                className="text-blue-600 hover:text-blue-800 text-xs font-medium mt-1 inline-block"
                                             >
                                                 Voir plus 📖
                                             </button>
                                         )}
                                     </div>
-                                    <p className="text-xs sm:text-sm text-gray-500">
-                                        <span className="font-medium">Âge:</span> {product.age || 'Non spécifié'}
-                                    </p>
-                                    <p className="text-lg sm:text-xl font-bold text-pink-600">{product.price} DHS</p>
-                                    {!authorized &&
+
+                                    <div className="flex flex-wrap items-center justify-between gap-2">
+                                        <p className="text-xs text-gray-500">
+                                            <span className="font-medium">Âge:</span> {product.age || 'Non spécifié'}
+                                        </p>
+                                        <p className="text-lg font-bold text-pink-600">{product.price} DHS</p>
+                                    </div>
+
+                                    {!authorized && (
                                         <>
-                                            <div className="flex flex-wrap items-center gap-2">
-                                                <label className="text-xs sm:text-sm font-medium text-gray-700">Quantité :</label>
+                                            <div className="flex flex-wrap items-center gap-2 pt-1">
+                                                <label className="text-xs font-medium text-gray-700">Quantité :</label>
                                                 <select
                                                     value={quantities[product.id] || 1}
                                                     onChange={(e) => {
                                                         const value = parseInt(e.target.value);
                                                         handleQuantitySelection(product.id, value);
                                                     }}
-                                                    className="border border-gray-300 rounded-md px-2 py-1 text-xs sm:text-sm focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none"
+                                                    className="border border-gray-300 rounded-md px-2 py-1 text-xs focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none"
                                                 >
                                                     {[...Array(10)].map((_, i) => (
                                                         <option key={i + 1} value={i + 1}>
@@ -798,13 +809,14 @@ export default function Product({ authorized }) {
                                                 </select>
                                             </div>
 
-                                            <div className="flex flex-col gap-2">
+                                            <div className="flex flex-col gap-2 pt-1">
                                                 <button
                                                     onClick={() => handlePanier(product.id)}
-                                                    className={`w-full px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${cartStatus[product.id]
+                                                    className={`w-full px-3 py-2 rounded-lg font-medium transition-all duration-200 text-sm ${
+                                                        cartStatus[product.id]
                                                             ? 'bg-green-500 hover:bg-green-600 text-white'
                                                             : 'bg-yellow-500 hover:bg-yellow-600 text-white hover:shadow-md'
-                                                        }`}
+                                                    }`}
                                                 >
                                                     {cartStatus[product.id] ? '✅ Dans le panier' : '🛒 Ajouter au panier'}
                                                 </button>
@@ -812,14 +824,14 @@ export default function Product({ authorized }) {
                                                 {cartStatus[product.id] && (
                                                     <button
                                                         onClick={() => removeFromCart(product.id)}
-                                                        className="w-full px-3 sm:px-4 py-1 text-xs sm:text-sm rounded-lg font-medium bg-red-100 hover:bg-red-200 text-red-600 transition-colors duration-200"
+                                                        className="w-full px-3 py-1 text-xs rounded-lg font-medium bg-red-100 hover:bg-red-200 text-red-600 transition-colors duration-200"
                                                     >
                                                         Retirer du panier
                                                     </button>
                                                 )}
                                             </div>
                                         </>
-                                    }
+                                    )}
                                 </div>
                             </div>
                         );
