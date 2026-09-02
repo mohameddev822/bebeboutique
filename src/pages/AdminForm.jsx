@@ -11,7 +11,7 @@ export default function AdminForm() {
     const [imagePreviews, setImagePreviews] = useState([]);
     const [age, setAge] = useState('');
     const [useAIDescription, setUseAIDescription] = useState(false);
-    const [prompt, setPrompt] = useState(false);
+    const [prompt, setPrompt] = useState('');
     const [generate, setGenerate] = useState(false);
 
     const handleImageChange = (e) => {
@@ -136,9 +136,9 @@ export default function AdminForm() {
                                     <button
                                         type="button"
                                         onClick={generateAIDescription}
-                                        disabled={!generate}
+                                        disabled={prompt === ''}
                                         className={`px-3 py-1 text-xs sm:text-sm rounded-lg font-medium transition-all ${
-                                             !generate
+                                            prompt === ''
                                                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                                 : 'bg-purple-500 hover:bg-purple-600 text-white'
                                         }`}
