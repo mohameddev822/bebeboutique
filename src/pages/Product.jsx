@@ -806,7 +806,7 @@ export default function Product({ authorized }) {
                                                 <td className="px-4 py-2 text-sm text-gray-700" {...props} />
                                             ),
                                         }}
-                                    > `${product.description.slice(0, MAX_LENGTH)}...`</ReactMarkdown>
+                                    > {product.description.slice(0, MAX_LENGTH)}</ReactMarkdown>
                                                 :   <ReactMarkdown
                                         remarkPlugins={[remarkGfm]}
                                         components={{
