@@ -450,7 +450,7 @@ export default function Product({ authorized }) {
                                                     <img 
                                                         src={img} 
                                                         alt={`${selectedProduct.name} - image ${idx + 1}`} 
-                                                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                                        className="w-full h-full  hover:scale-105 transition-transform duration-300"
                                                     />
                                                     {idx === 0 && (
                                                         <div className="absolute top-1 left-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">
@@ -466,7 +466,7 @@ export default function Product({ authorized }) {
                                             <img 
                                                 src={selectedProduct.images?.[0] || selectedProduct.image} 
                                                 alt={selectedProduct.name} 
-                                                className="w-full h-full object-cover"
+                                                className="w-full h-full "
                                             />
                                         </div>
                                     )}
@@ -654,7 +654,7 @@ export default function Product({ authorized }) {
                                                     <img
                                                         src={preview}
                                                         alt={`Preview ${index + 1}`}
-                                                        className="w-full h-20 sm:h-24 object-cover rounded-lg border border-gray-200"
+                                                        className="w-full h-20 sm:h-24  rounded-lg border border-gray-200"
                                                     />
                                                     <button
                                                         type="button"
@@ -712,7 +712,7 @@ export default function Product({ authorized }) {
                                                         <img 
                                                             src={img} 
                                                             alt={`${product.name} - image ${idx + 1}`} 
-                                                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                                            className="w-full h-full  hover:scale-105 transition-transform duration-300"
                                                         />
                                                         {idx === 0 && (
                                                             <div className="absolute top-1 left-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">
@@ -732,7 +732,7 @@ export default function Product({ authorized }) {
                                             <img 
                                                 src={productImages[0]} 
                                                 alt={product.name} 
-                                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" 
+                                                className="w-full h-full  hover:scale-105 transition-transform duration-300" 
                                             />
                                         </div>
                                     )}

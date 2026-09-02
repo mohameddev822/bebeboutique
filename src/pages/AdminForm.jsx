@@ -296,7 +296,7 @@ export default function AdminForm() {
                                             <img
                                                 src={preview}
                                                 alt={`Preview ${index + 1}`}
-                                                className="w-full h-24 sm:h-32 object-cover rounded-lg border border-gray-200 shadow-sm"
+                                                className="w-full h-24 sm:h-32  rounded-lg border border-gray-200 shadow-sm"
                                             />
                                             <button
                                                 type="button"
