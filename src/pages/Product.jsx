@@ -27,36 +27,17 @@ export default function Product({ authorized }) {
         images: []
     });
     const [imagePreviews, setImagePreviews] = useState([]);
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const MAX_LENGTH = 100;
 
     const handleOpenModal = (productId) => {
         const foundProduct = allproducts.find((product) => product.id === productId);
         setSelectedProduct(foundProduct);
-        setCurrentImageIndex(0);
         setShowDescriptionModal(true);
     };
 
     const handleCloseModal = () => {
         setShowDescriptionModal(false);
         setSelectedProduct(null);
-        setCurrentImageIndex(0);
-    };
-
-    const nextImage = () => {
-        if (selectedProduct && selectedProduct.images) {
-            setCurrentImageIndex((prev) => 
-                prev === selectedProduct.images.length - 1 ? 0 : prev + 1
-            );
-        }
-    };
-
-    const prevImage = () => {
-        if (selectedProduct && selectedProduct.images) {
-            setCurrentImageIndex((prev) => 
-                prev === 0 ? selectedProduct.images.length - 1 : prev - 1
-            );
-        }
     };
 
     const handleOpenEditModal = (product) => {
@@ -287,6 +268,22 @@ export default function Product({ authorized }) {
         setCartStatus({ ...cartStatus, [productId]: false });
     };
 
+    // Fonction pour extraire le texte brut du markdown
+    const stripMarkdown = (text) => {
+        if (!text) return '';
+        return text
+            .replace(/#{1,6}\s/g, '') // Enlever les titres
+            .replace(/\*\*/g, '') // Enlever le gras
+            .replace(/\*/g, '') // Enlever l'italique
+            .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Enlever les liens
+            .replace(/!\[([^\]]*)\]\([^)]+\)/g, '$1') // Enlever les images
+            .replace(/`{1,3}[^`]*`{1,3}/g, '') // Enlever le code
+            .replace(/\|/g, '') // Enlever les tableaux
+            .replace(/---/g, '') // Enlever les séparateurs
+            .replace(/\n{2,}/g, '\n') // Réduire les sauts de ligne
+            .trim();
+    };
+
     return (
         <>
             <div className="flex flex-col sm:flex-row justify-between items-center rounded-lg mt-9 mr-4 sm:mr-28 ml-4 sm:ml-28 gap-4 sm:gap-0">
@@ -425,7 +422,7 @@ export default function Product({ authorized }) {
                 </div>
             )}
 
-            {/* Description Modal with Markdown Support */}
+            {/* Description Modal with Markdown Support and Image Grid */}
             {showDescriptionModal && selectedProduct && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
@@ -442,50 +439,47 @@ export default function Product({ authorized }) {
                         </div>
 
                         <div className="p-4 sm:p-6 space-y-4">
-                            {/* Images Gallery */}
-                            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
-                                <div className="relative w-full sm:w-64">
-                                    <img
-                                        src={selectedProduct.images?.[currentImageIndex] || selectedProduct.image}
-                                        alt={selectedProduct.name}
-                                        className="w-full h-48 sm:h-64 object-cover rounded-lg shadow-md"
-                                    />
-                                    {selectedProduct.images && selectedProduct.images.length > 1 && (
-                                        <>
-                                            <button
-                                                onClick={prevImage}
-                                                className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full w-8 h-8 flex items-center justify-center transition-colors"
-                                            >
-                                                ‹
-                                            </button>
-                                            <button
-                                                onClick={nextImage}
-                                                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full w-8 h-8 flex items-center justify-center transition-colors"
-                                            >
-                                                ›
-                                            </button>
-                                            <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1">
-                                                {selectedProduct.images.map((_, index) => (
-                                                    <div
-                                                        key={index}
-                                                        className={`w-2 h-2 rounded-full ${
-                                                            index === currentImageIndex ? 'bg-white' : 'bg-white/50'
-                                                        }`}
+                            {/* Images Gallery - TOUJOURS EN GRILLE */}
+                            <div className="flex flex-col items-center gap-3">
+                                <div className="w-full">
+                                    {selectedProduct.images && selectedProduct.images.length > 1 ? (
+                                        // Grille d'images
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                            {selectedProduct.images.map((img, idx) => (
+                                                <div key={idx} className="relative aspect-square overflow-hidden rounded-lg border border-gray-200">
+                                                    <img 
+                                                        src={img} 
+                                                        alt={`${selectedProduct.name} - image ${idx + 1}`} 
+                                                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                                                     />
-                                                ))}
-                                            </div>
-                                        </>
+                                                    {idx === 0 && (
+                                                        <div className="absolute top-1 left-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">
+                                                            Principal
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        // Une seule image
+                                        <div className="relative w-full aspect-square max-h-64 overflow-hidden rounded-lg border border-gray-200">
+                                            <img 
+                                                src={selectedProduct.images?.[0] || selectedProduct.image} 
+                                                alt={selectedProduct.name} 
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
                                     )}
                                 </div>
-                                <div className="text-center sm:text-left flex-1">
+                                <div className="text-center w-full">
                                     <h3 className="text-lg sm:text-xl font-bold text-gray-800">{selectedProduct.name}</h3>
                                     <p className="text-pink-600 font-semibold text-lg">{selectedProduct.price} DHS</p>
                                     <p className="text-sm text-gray-500">
-                                        <span className="font-medium">Age:</span> {selectedProduct.age || 'Non spécifié'}
+                                        <span className="font-medium">Âge:</span> {selectedProduct.age || 'Non spécifié'}
                                     </p>
                                     {selectedProduct.images && selectedProduct.images.length > 1 && (
                                         <p className="text-xs text-gray-400 mt-1">
-                                            {currentImageIndex + 1} / {selectedProduct.images.length} images
+                                            {selectedProduct.images.length} images disponibles
                                         </p>
                                     )}
                                 </div>
@@ -701,6 +695,10 @@ export default function Product({ authorized }) {
                     {allproducts.map((product) => {
                         const productImages = product.images || [product.image];
                         const hasMultipleImages = productImages.length > 1;
+                        const plainTextDescription = stripMarkdown(product.description);
+                        const truncatedDescription = plainTextDescription.length > MAX_LENGTH 
+                            ? plainTextDescription.slice(0, MAX_LENGTH) + '...' 
+                            : plainTextDescription;
                         
                         return (
                             <div key={product.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200 border border-gray-100 relative">
@@ -764,103 +762,20 @@ export default function Product({ authorized }) {
                                     </div>
 
                                     <div className="relative">
-                                        <p className="text-gray-600 text-xs sm:text-sm">
-                                            {product.description.length > MAX_LENGTH
-                                                ?  <ReactMarkdown
-                                        remarkPlugins={[remarkGfm]}
-                                        components={{
-                                            h1: ({...props}) => <h1 className="text-2xl font-bold text-gray-800 mt-4 mb-3" {...props} />,
-                                            h2: ({...props}) => <h2 className="text-xl font-semibold text-gray-800 mt-3 mb-2" {...props} />,
-                                            h3: ({...props}) => <h3 className="text-lg font-semibold text-gray-800 mt-3 mb-2" {...props} />,
-                                            h4: ({...props}) => <h4 className="text-base font-semibold text-gray-800 mt-2 mb-1.5" {...props} />,
-                                            h5: ({...props}) => <h5 className="text-sm font-semibold text-gray-700 mt-2 mb-1" {...props} />,
-                                            h6: ({...props}) => <h6 className="text-xs font-semibold text-gray-600 mt-1.5 mb-1" {...props} />,
-                                            p: ({...props}) => <p className="text-sm leading-relaxed mb-3 text-gray-700" {...props} />,
-                                            ul: ({...props}) => <ul className="list-disc pl-5 mb-3 space-y-1" {...props} />,
-                                            ol: ({...props}) => <ol className="list-decimal pl-5 mb-3 space-y-1" {...props} />,
-                                            li: ({...props}) => <li className="text-sm text-gray-700" {...props} />,
-                                            strong: ({...props}) => <strong className="font-semibold text-gray-800" {...props} />,
-                                            em: ({...props}) => <em className="italic text-gray-600" {...props} />,
-                                            del: ({...props}) => <del className="text-gray-400" {...props} />,
-                                            blockquote: ({...props}) => <blockquote className="border-l-4 border-blue-300 pl-4 italic text-gray-600 my-3" {...props} />,
-                                            code: ({inline, ...props}) => 
-                                                inline ? 
-                                                    <code className="bg-gray-100 px-1.5 py-0.5 rounded text-pink-600 text-xs" {...props} /> :
-                                                    <code className="block bg-gray-100 p-3 rounded-lg text-sm overflow-x-auto" {...props} />,
-                                            pre: ({...props}) => <pre className="bg-gray-100 p-3 rounded-lg overflow-x-auto mb-3" {...props} />,
-                                            a: ({...props}) => <a className="text-blue-600 hover:text-blue-800 underline" {...props} />,
-                                            img: ({...props}) => <img className="max-w-full h-auto rounded-lg my-2" {...props} />,
-                                            hr: ({...props}) => <hr className="my-4 border-gray-200" {...props} />,
-                                            table: ({...props}) => (
-                                                <div className="overflow-x-auto my-3 border border-gray-200 rounded-lg">
-                                                    <table className="min-w-full divide-y divide-gray-200" {...props} />
-                                                </div>
-                                            ),
-                                            thead: ({...props}) => <thead className="bg-gray-50" {...props} />,
-                                            tbody: ({...props}) => <tbody className="bg-white divide-y divide-gray-200" {...props} />,
-                                            tr: ({...props}) => <tr className="hover:bg-gray-50 transition-colors" {...props} />,
-                                            th: ({...props}) => (
-                                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" {...props} />
-                                            ),
-                                            td: ({...props}) => (
-                                                <td className="px-4 py-2 text-sm text-gray-700" {...props} />
-                                            ),
-                                        }}
-                                    > {product.description.slice(0, MAX_LENGTH)}</ReactMarkdown>
-                                                :   <ReactMarkdown
-                                        remarkPlugins={[remarkGfm]}
-                                        components={{
-                                            h1: ({...props}) => <h1 className="text-2xl font-bold text-gray-800 mt-4 mb-3" {...props} />,
-                                            h2: ({...props}) => <h2 className="text-xl font-semibold text-gray-800 mt-3 mb-2" {...props} />,
-                                            h3: ({...props}) => <h3 className="text-lg font-semibold text-gray-800 mt-3 mb-2" {...props} />,
-                                            h4: ({...props}) => <h4 className="text-base font-semibold text-gray-800 mt-2 mb-1.5" {...props} />,
-                                            h5: ({...props}) => <h5 className="text-sm font-semibold text-gray-700 mt-2 mb-1" {...props} />,
-                                            h6: ({...props}) => <h6 className="text-xs font-semibold text-gray-600 mt-1.5 mb-1" {...props} />,
-                                            p: ({...props}) => <p className="text-sm leading-relaxed mb-3 text-gray-700" {...props} />,
-                                            ul: ({...props}) => <ul className="list-disc pl-5 mb-3 space-y-1" {...props} />,
-                                            ol: ({...props}) => <ol className="list-decimal pl-5 mb-3 space-y-1" {...props} />,
-                                            li: ({...props}) => <li className="text-sm text-gray-700" {...props} />,
-                                            strong: ({...props}) => <strong className="font-semibold text-gray-800" {...props} />,
-                                            em: ({...props}) => <em className="italic text-gray-600" {...props} />,
-                                            del: ({...props}) => <del className="text-gray-400" {...props} />,
-                                            blockquote: ({...props}) => <blockquote className="border-l-4 border-blue-300 pl-4 italic text-gray-600 my-3" {...props} />,
-                                            code: ({inline, ...props}) => 
-                                                inline ? 
-                                                    <code className="bg-gray-100 px-1.5 py-0.5 rounded text-pink-600 text-xs" {...props} /> :
-                                                    <code className="block bg-gray-100 p-3 rounded-lg text-sm overflow-x-auto" {...props} />,
-                                            pre: ({...props}) => <pre className="bg-gray-100 p-3 rounded-lg overflow-x-auto mb-3" {...props} />,
-                                            a: ({...props}) => <a className="text-blue-600 hover:text-blue-800 underline" {...props} />,
-                                            img: ({...props}) => <img className="max-w-full h-auto rounded-lg my-2" {...props} />,
-                                            hr: ({...props}) => <hr className="my-4 border-gray-200" {...props} />,
-                                            table: ({...props}) => (
-                                                <div className="overflow-x-auto my-3 border border-gray-200 rounded-lg">
-                                                    <table className="min-w-full divide-y divide-gray-200" {...props} />
-                                                </div>
-                                            ),
-                                            thead: ({...props}) => <thead className="bg-gray-50" {...props} />,
-                                            tbody: ({...props}) => <tbody className="bg-white divide-y divide-gray-200" {...props} />,
-                                            tr: ({...props}) => <tr className="hover:bg-gray-50 transition-colors" {...props} />,
-                                            th: ({...props}) => (
-                                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" {...props} />
-                                            ),
-                                            td: ({...props}) => (
-                                                <td className="px-4 py-2 text-sm text-gray-700" {...props} />
-                                            ),
-                                        }}
-                                    >{product.description}</ReactMarkdown>
-                                    }
-                                        {product.description.length > MAX_LENGTH && (
+                                        <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
+                                            {truncatedDescription}
+                                        </p>
+                                        {plainTextDescription.length > MAX_LENGTH && (
                                             <button
                                                 onClick={() => handleOpenModal(product.id)}
-                                                className="text-blue-600 hover:text-blue-800 text-xs sm:text-sm font-medium mt-1"
+                                                className="text-blue-600 hover:text-blue-800 text-xs sm:text-sm font-medium mt-1 inline-block"
                                             >
                                                 Voir plus 📖
                                             </button>
                                         )}
-                                        </p>
                                     </div>
                                     <p className="text-xs sm:text-sm text-gray-500">
-                                        <span className="font-medium">Age:</span> {product.age || 'Non spécifié'}
+                                        <span className="font-medium">Âge:</span> {product.age || 'Non spécifié'}
                                     </p>
                                     <p className="text-lg sm:text-xl font-bold text-pink-600">{product.price} DHS</p>
                                     {!authorized &&
