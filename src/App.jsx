@@ -11,7 +11,9 @@ export default function App() {
     const fetchClientId = async () => {
       try {
         const response = await axios.get("https://backend-theta-gold-46.vercel.app/api/getclientid");
-        setClientId(response.data);
+        // Extract clientId from response - handle both string and object responses
+        const id = typeof response.data === 'string' ? response.data : response.data.clientId;
+        setClientId(id);
       } catch (error) {
         console.error('Error fetching client ID:', error);
       } 

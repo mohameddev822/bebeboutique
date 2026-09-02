@@ -49,8 +49,8 @@ export default function AdminForm() {
                 keywords: keywords
             });
             
-            if (response.data.description) {
-                setDescription(response.data.description);
+            if (response.data) {
+                setDescription(response.data);
             }
         } catch (error) {
             console.error('Error generating description:', error);
