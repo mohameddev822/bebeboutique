@@ -26,7 +26,6 @@ export default function Product({ authorized }) {
     });
     const [imagePreviews, setImagePreviews] = useState([]);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [expandedProductId, setExpandedProductId] = useState(null);
     const MAX_LENGTH = 100;
 
     const handleOpenModal = (productId) => {
@@ -40,14 +39,6 @@ export default function Product({ authorized }) {
         setShowDescriptionModal(false);
         setSelectedProduct(null);
         setCurrentImageIndex(0);
-    };
-
-    const toggleImageGrid = (productId) => {
-        if (expandedProductId === productId) {
-            setExpandedProductId(null);
-        } else {
-            setExpandedProductId(productId);
-        }
     };
 
     const nextImage = () => {
@@ -657,13 +648,13 @@ export default function Product({ authorized }) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 px-4">
                     {allproducts.map((product) => {
                         const productImages = product.images || [product.image];
-                        const isExpanded = expandedProductId === product.id;
+                        const hasMultipleImages = productImages.length > 1;
                         
                         return (
                             <div key={product.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200 border border-gray-100 relative">
-                                {/* Image principale ou grille d'images */}
+                                {/* Affichage toujours en grille si plusieurs images, sinon une seule image */}
                                 <div className="relative">
-                                    {isExpanded && productImages.length > 1 ? (
+                                    {hasMultipleImages ? (
                                         // Affichage en grille quand il y a plusieurs images
                                         <div className="relative">
                                             <div className="grid grid-cols-2 gap-1 p-1 bg-gray-50">
@@ -682,12 +673,6 @@ export default function Product({ authorized }) {
                                                     </div>
                                                 ))}
                                             </div>
-                                            <button
-                                                onClick={() => toggleImageGrid(product.id)}
-                                                className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-black/60 hover:bg-black/80 text-white text-xs px-3 py-1.5 rounded-full transition-colors flex items-center gap-1 z-10"
-                                            >
-                                                🔼 Voir moins
-                                            </button>
                                             <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 z-10">
                                                 <span>📸</span>
                                                 {productImages.length}
@@ -701,20 +686,6 @@ export default function Product({ authorized }) {
                                                 alt={product.name} 
                                                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" 
                                             />
-                                            {productImages.length > 1 && (
-                                                <>
-                                                    <button
-                                                        onClick={() => toggleImageGrid(product.id)}
-                                                        className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-black/60 hover:bg-black/80 text-white text-xs px-3 py-1.5 rounded-full transition-colors flex items-center gap-1 z-10"
-                                                    >
-                                                        👁️ Voir toutes ({productImages.length})
-                                                    </button>
-                                                    <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 z-10">
-                                                        <span>📸</span>
-                                                        {productImages.length}
-                                                    </div>
-                                                </>
-                                            )}
                                         </div>
                                     )}
                                 </div>
