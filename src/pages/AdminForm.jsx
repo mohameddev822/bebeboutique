@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+
 export default function AdminForm() {
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
@@ -191,6 +193,7 @@ export default function AdminForm() {
         </div>
         <div className="prose prose-sm max-w-none text-gray-700 leading-relaxed">
             <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
                 components={{
                     h1: ({...props}) => <h1 className="text-xl font-bold text-gray-800 mt-3 mb-2" {...props} />,
                     h2: ({ ...props}) => <h2 className="text-lg font-semibold text-gray-800 mt-3 mb-2" {...props} />,
