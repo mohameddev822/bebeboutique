@@ -12,7 +12,7 @@ export default function AdminForm() {
     const [age, setAge] = useState('');
     const [isGenerating, setIsGenerating] = useState(false);
     const [useAIDescription, setUseAIDescription] = useState(false);
-    const [keywords, setKeywords] = useState('');
+    const [prompt, setPrompt] = useState('');
 
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
@@ -37,17 +37,13 @@ export default function AdminForm() {
     };
 
     const generateAIDescription = async () => {
-        if (!name) {
-            alert('Veuillez d\'abord entrer le nom du produit');
+        if (!prompt) {
             return;
         }
 
         setIsGenerating(true);
             const response = await axios.post('https://backend-theta-gold-46.vercel.app/api/generate-description', {
-                productName: name,
-                age: age,
-                keywords: keywords,
-                price: price
+                prompt: prompt,
             });
             
             if (response.data) {
@@ -90,7 +86,7 @@ export default function AdminForm() {
             setAge('');
             setImages([]);
             setImagePreviews([]);
-            setKeywords('');
+            setPrompt('');
             setUseAIDescription(false);
             
         
@@ -203,13 +199,13 @@ export default function AdminForm() {
                             
                                 <div className="mt-2">
                                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Mots-clés (optionnel)
+                                        Prompt
                                     </label>
                                     <input
                                         type="text"
-                                        value={keywords}
-                                        onChange={(e) => setKeywords(e.target.value)}
-                                        placeholder="Ex: éducatif, sécurisé, durable"
+                                        value={prompt}
+                                        onChange={(e) => setPrompt(e.target.value)}
+                                        placeholder="Ton prompt ici"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none text-sm"
                                     />
                                 </div>
