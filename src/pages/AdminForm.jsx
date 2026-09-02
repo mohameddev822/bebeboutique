@@ -12,6 +12,7 @@ export default function AdminForm() {
     const [age, setAge] = useState('');
     const [useAIDescription, setUseAIDescription] = useState(false);
     const [prompt, setPrompt] = useState(false);
+    const [generate, setGenerate] = useState(false);
 
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
@@ -36,11 +37,9 @@ export default function AdminForm() {
     };
 
     const generateAIDescription = async () => {
-        if (!prompt) {
-            return;
-        }
+        
 
-        setPrompt(true);
+        setGenerate(true);
             const response = await axios.post('https://backend-theta-gold-46.vercel.app/api/generate-description', {
                 prompt: prompt,
             });
@@ -48,7 +47,7 @@ export default function AdminForm() {
             if (response.data) {
                 setDescription(response.data.description || response.data);
             }
-            setPrompt(false);
+            setGenerate(false);
         };
 
     const handleSubmit = async (e) => {
@@ -137,14 +136,14 @@ export default function AdminForm() {
                                     <button
                                         type="button"
                                         onClick={generateAIDescription}
-                                        disabled={!prompt}
+                                        disabled={!generate}
                                         className={`px-3 py-1 text-xs sm:text-sm rounded-lg font-medium transition-all ${
-                                             !prompt
+                                             !generate
                                                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                                 : 'bg-purple-500 hover:bg-purple-600 text-white'
                                         }`}
                                     >
-                                        {prompt ? '⏳ Génération...' : '🤖 Générer IA'}
+                                        {generate ? '⏳ Génération...' : '🤖 Générer IA'}
                                     </button>
                                 </div>
                             </div>
