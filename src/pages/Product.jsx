@@ -766,9 +766,89 @@ export default function Product({ authorized }) {
                                     <div className="relative">
                                         <p className="text-gray-600 text-xs sm:text-sm">
                                             {product.description.length > MAX_LENGTH
-                                                ? `${product.description.slice(0, MAX_LENGTH)}...`
-                                                : product.description}
-                                        </p>
+                                                ?  <ReactMarkdown
+                                        remarkPlugins={[remarkGfm]}
+                                        components={{
+                                            h1: ({...props}) => <h1 className="text-2xl font-bold text-gray-800 mt-4 mb-3" {...props} />,
+                                            h2: ({...props}) => <h2 className="text-xl font-semibold text-gray-800 mt-3 mb-2" {...props} />,
+                                            h3: ({...props}) => <h3 className="text-lg font-semibold text-gray-800 mt-3 mb-2" {...props} />,
+                                            h4: ({...props}) => <h4 className="text-base font-semibold text-gray-800 mt-2 mb-1.5" {...props} />,
+                                            h5: ({...props}) => <h5 className="text-sm font-semibold text-gray-700 mt-2 mb-1" {...props} />,
+                                            h6: ({...props}) => <h6 className="text-xs font-semibold text-gray-600 mt-1.5 mb-1" {...props} />,
+                                            p: ({...props}) => <p className="text-sm leading-relaxed mb-3 text-gray-700" {...props} />,
+                                            ul: ({...props}) => <ul className="list-disc pl-5 mb-3 space-y-1" {...props} />,
+                                            ol: ({...props}) => <ol className="list-decimal pl-5 mb-3 space-y-1" {...props} />,
+                                            li: ({...props}) => <li className="text-sm text-gray-700" {...props} />,
+                                            strong: ({...props}) => <strong className="font-semibold text-gray-800" {...props} />,
+                                            em: ({...props}) => <em className="italic text-gray-600" {...props} />,
+                                            del: ({...props}) => <del className="text-gray-400" {...props} />,
+                                            blockquote: ({...props}) => <blockquote className="border-l-4 border-blue-300 pl-4 italic text-gray-600 my-3" {...props} />,
+                                            code: ({inline, ...props}) => 
+                                                inline ? 
+                                                    <code className="bg-gray-100 px-1.5 py-0.5 rounded text-pink-600 text-xs" {...props} /> :
+                                                    <code className="block bg-gray-100 p-3 rounded-lg text-sm overflow-x-auto" {...props} />,
+                                            pre: ({...props}) => <pre className="bg-gray-100 p-3 rounded-lg overflow-x-auto mb-3" {...props} />,
+                                            a: ({...props}) => <a className="text-blue-600 hover:text-blue-800 underline" {...props} />,
+                                            img: ({...props}) => <img className="max-w-full h-auto rounded-lg my-2" {...props} />,
+                                            hr: ({...props}) => <hr className="my-4 border-gray-200" {...props} />,
+                                            table: ({...props}) => (
+                                                <div className="overflow-x-auto my-3 border border-gray-200 rounded-lg">
+                                                    <table className="min-w-full divide-y divide-gray-200" {...props} />
+                                                </div>
+                                            ),
+                                            thead: ({...props}) => <thead className="bg-gray-50" {...props} />,
+                                            tbody: ({...props}) => <tbody className="bg-white divide-y divide-gray-200" {...props} />,
+                                            tr: ({...props}) => <tr className="hover:bg-gray-50 transition-colors" {...props} />,
+                                            th: ({...props}) => (
+                                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" {...props} />
+                                            ),
+                                            td: ({...props}) => (
+                                                <td className="px-4 py-2 text-sm text-gray-700" {...props} />
+                                            ),
+                                        }}
+                                    > `${product.description.slice(0, MAX_LENGTH)}...`</ReactMarkdown>
+                                                :   <ReactMarkdown
+                                        remarkPlugins={[remarkGfm]}
+                                        components={{
+                                            h1: ({...props}) => <h1 className="text-2xl font-bold text-gray-800 mt-4 mb-3" {...props} />,
+                                            h2: ({...props}) => <h2 className="text-xl font-semibold text-gray-800 mt-3 mb-2" {...props} />,
+                                            h3: ({...props}) => <h3 className="text-lg font-semibold text-gray-800 mt-3 mb-2" {...props} />,
+                                            h4: ({...props}) => <h4 className="text-base font-semibold text-gray-800 mt-2 mb-1.5" {...props} />,
+                                            h5: ({...props}) => <h5 className="text-sm font-semibold text-gray-700 mt-2 mb-1" {...props} />,
+                                            h6: ({...props}) => <h6 className="text-xs font-semibold text-gray-600 mt-1.5 mb-1" {...props} />,
+                                            p: ({...props}) => <p className="text-sm leading-relaxed mb-3 text-gray-700" {...props} />,
+                                            ul: ({...props}) => <ul className="list-disc pl-5 mb-3 space-y-1" {...props} />,
+                                            ol: ({...props}) => <ol className="list-decimal pl-5 mb-3 space-y-1" {...props} />,
+                                            li: ({...props}) => <li className="text-sm text-gray-700" {...props} />,
+                                            strong: ({...props}) => <strong className="font-semibold text-gray-800" {...props} />,
+                                            em: ({...props}) => <em className="italic text-gray-600" {...props} />,
+                                            del: ({...props}) => <del className="text-gray-400" {...props} />,
+                                            blockquote: ({...props}) => <blockquote className="border-l-4 border-blue-300 pl-4 italic text-gray-600 my-3" {...props} />,
+                                            code: ({inline, ...props}) => 
+                                                inline ? 
+                                                    <code className="bg-gray-100 px-1.5 py-0.5 rounded text-pink-600 text-xs" {...props} /> :
+                                                    <code className="block bg-gray-100 p-3 rounded-lg text-sm overflow-x-auto" {...props} />,
+                                            pre: ({...props}) => <pre className="bg-gray-100 p-3 rounded-lg overflow-x-auto mb-3" {...props} />,
+                                            a: ({...props}) => <a className="text-blue-600 hover:text-blue-800 underline" {...props} />,
+                                            img: ({...props}) => <img className="max-w-full h-auto rounded-lg my-2" {...props} />,
+                                            hr: ({...props}) => <hr className="my-4 border-gray-200" {...props} />,
+                                            table: ({...props}) => (
+                                                <div className="overflow-x-auto my-3 border border-gray-200 rounded-lg">
+                                                    <table className="min-w-full divide-y divide-gray-200" {...props} />
+                                                </div>
+                                            ),
+                                            thead: ({...props}) => <thead className="bg-gray-50" {...props} />,
+                                            tbody: ({...props}) => <tbody className="bg-white divide-y divide-gray-200" {...props} />,
+                                            tr: ({...props}) => <tr className="hover:bg-gray-50 transition-colors" {...props} />,
+                                            th: ({...props}) => (
+                                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" {...props} />
+                                            ),
+                                            td: ({...props}) => (
+                                                <td className="px-4 py-2 text-sm text-gray-700" {...props} />
+                                            ),
+                                        }}
+                                    >{product.description}</ReactMarkdown>
+                                    }
                                         {product.description.length > MAX_LENGTH && (
                                             <button
                                                 onClick={() => handleOpenModal(product.id)}
@@ -777,6 +857,7 @@ export default function Product({ authorized }) {
                                                 Voir plus 📖
                                             </button>
                                         )}
+                                        </p>
                                     </div>
                                     <p className="text-xs sm:text-sm text-gray-500">
                                         <span className="font-medium">Age:</span> {product.age || 'Non spécifié'}
