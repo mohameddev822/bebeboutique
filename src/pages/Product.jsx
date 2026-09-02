@@ -26,6 +26,7 @@ export default function Product({ authorized }) {
     });
     const [imagePreviews, setImagePreviews] = useState([]);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [expandedProductId, setExpandedProductId] = useState(null); // Nouvel état pour suivre le produit agrandi
     const MAX_LENGTH = 100;
 
     const handleOpenModal = (productId) => {
@@ -39,6 +40,15 @@ export default function Product({ authorized }) {
         setShowDescriptionModal(false);
         setSelectedProduct(null);
         setCurrentImageIndex(0);
+    };
+
+    // Toggle pour afficher/masquer toutes les images d'un produit
+    const toggleImageGrid = (productId) => {
+        if (expandedProductId === productId) {
+            setExpandedProductId(null);
+        } else {
+            setExpandedProductId(productId);
+        }
     };
 
     // Image navigation for modal
@@ -649,20 +659,56 @@ export default function Product({ authorized }) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 px-4">
                     {allproducts.map((product) => {
                         const productImages = product.images || [product.image];
+                        const isExpanded = expandedProductId === product.id;
+                        
                         return (
                             <div key={product.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200 border border-gray-100 relative">
-                                <div className="h-48 sm:h-56 md:h-64 overflow-hidden bg-gray-50 relative">
-                                    <img 
-                                        src={productImages[0]} 
-                                        alt={product.name} 
-                                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" 
-                                    />
-                                    {productImages.length > 1 && (
-                                        <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
-                                            +{productImages.length - 1}
+                                {/* Image principale ou grille d'images */}
+                                <div className="relative">
+                                    {isExpanded && productImages.length > 1 ? (
+                                        // Affichage en grille quand il y a plusieurs images
+                                        <div className="grid grid-cols-2 gap-1 p-1 bg-gray-50">
+                                            {productImages.map((img, idx) => (
+                                                <div key={idx} className="relative aspect-square overflow-hidden rounded-lg">
+                                                    <img 
+                                                        src={img} 
+                                                        alt={`${product.name} - image ${idx + 1}`} 
+                                                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                                    />
+                                                    {idx === 0 && (
+                                                        <div className="absolute top-1 left-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">
+                                                            Principal
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        // Affichage normal (une seule image)
+                                        <div className="h-48 sm:h-56 md:h-64 overflow-hidden bg-gray-50 relative">
+                                            <img 
+                                                src={productImages[0]} 
+                                                alt={product.name} 
+                                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" 
+                                            />
+                                            {productImages.length > 1 && (
+                                                <>
+                                                    <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                                                        <span>📸</span>
+                                                        {productImages.length}
+                                                    </div>
+                                                    <button
+                                                        onClick={() => toggleImageGrid(product.id)}
+                                                        className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-black/60 hover:bg-black/80 text-white text-xs px-3 py-1.5 rounded-full transition-colors flex items-center gap-1"
+                                                    >
+                                                        {isExpanded ? '🔼 Voir moins' : `👁️ Voir toutes (${productImages.length})`}
+                                                    </button>
+                                                </>
+                                            )}
                                         </div>
                                     )}
                                 </div>
+
                                 <div className="p-3 sm:p-4 space-y-2">
                                     <div className="flex justify-between items-start">
                                         <h2 className="text-base sm:text-lg font-semibold text-gray-800">{product.name}</h2>
