@@ -1,16 +1,28 @@
-# React + Vite
+𝐁𝐞𝐛𝐞 𝐁𝐨𝐮𝐭𝐢𝐪𝐮𝐞
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Technologies utilisées :
 
-Currently, two official plugins are available:
+- React.js pour le frontend
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Node.js & Express pour le backend
 
-## React Compiler
+- SQLite comme base de données locale
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- OAuth Google pour l'authentification admin 
 
-## Expanding the ESLint configuration
+Objectif du projet :
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Conception et développement d'un site e-commerce pour commander en envoyant un message Whatsapp à l'admin
+
+Fonctionnalités principales :
+
+- S'authentifier en tant qu'admin 
+
+- Ajouter au panier un produit
+- 
+- Commander un produit via Whatsapp
+
+- Ajouter , modifier , supprimer un produit en tant qu'admin
+
+- ![Uploading Capture d'écran 2026-10-10 155738.png…]()
+
