@@ -24,7 +24,7 @@ Fonctionnalités principales :
 
 - Ajouter , modifier , supprimer un produit en tant qu'admin
 
-![Uploading Capture d'écran 2026-10-10 155738.png…]()
+<img width="1897" height="897" alt="Capture d&#39;écran 2026-10-10 155738" src="https://github.com/user-attachments/assets/5880b4f6-c11f-40e8-b5bb-c573b76a7a16" />
 
  SIte déployé par Vercel : https://bebeboutique-mohameddev822s-projects.vercel.app/
 
