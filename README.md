@@ -19,7 +19,7 @@ Fonctionnalités principales :
 - S'authentifier en tant qu'admin 
 
 - Ajouter au panier un produit
-- 
+ 
 - Commander un produit via Whatsapp
 
 - Ajouter , modifier , supprimer un produit en tant qu'admin
