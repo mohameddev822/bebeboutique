@@ -24,5 +24,7 @@ Fonctionnalités principales :
 
 - Ajouter , modifier , supprimer un produit en tant qu'admin
 
-- ![Uploading Capture d'écran 2026-10-10 155738.png…]()
+ ![Uploading Capture d'écran 2026-10-10 155738.png…]()
+
+ SIte déployé par Vercel : https://bebeboutique-mohameddev822s-projects.vercel.app/
 
